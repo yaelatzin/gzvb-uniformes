@@ -57,12 +57,10 @@ async function cargarUniforme() {
 
   const baseImg = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${slug}`;
 
-  const imgs = [1,2,3].map(i => `
-    <picture>
-      <source srcset="${baseImg}/foto-${i}.webp" type="image/webp">
-      <img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
-        loading="lazy" onerror="this.closest('picture').style.display='none'">
-    </picture>`).join('');
+  const imgs = [1,2,3].map(i =>
+    `<img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
+      loading="lazy" onerror="this.style.display='none'">`
+  ).join('');
 
   const descargaHTML = u.descargas_activas !== false
     ? `<div id="download-btn-container"><span class="no-file-msg">Cargando…</span></div>`
