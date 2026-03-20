@@ -33,10 +33,7 @@
       background-size: 200% 100%;
       animation: shimmer 1.4s infinite;
     }
-    .skeleton-info {
-      padding: 16px;
-      background: #0f0f0f;
-    }
+    .skeleton-info { padding: 16px; background: #0f0f0f; }
     .skeleton-line {
       height: 12px;
       border-radius: 6px;
@@ -55,8 +52,7 @@
     .card-wrapper { position: relative; }
     .badge-unavailable {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 12px; right: 12px;
       background: rgba(0,0,0,0.85);
       color: #ff4d4d;
       font-size: 0.7rem;
@@ -97,15 +93,10 @@
 </header>
 
 <section class="gallery" id="gallery">
-  <!-- Skeletons mientras carga -->
-  ${[...Array(4)].map(() => `
-  <div class="card-skeleton">
-    <div class="skeleton-img"></div>
-    <div class="skeleton-info">
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-    </div>
-  </div>`).join('')}
+  <div class="card-skeleton"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+  <div class="card-skeleton"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+  <div class="card-skeleton"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+  <div class="card-skeleton"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
 </section>
 
 <a href="https://wa.link/v7e1yu" class="whatsapp" target="_blank">WhatsApp</a>
@@ -133,21 +124,18 @@ async function cargarGaleria() {
     return;
   }
 
+  const inactive = u => u.activo === false;
+
   gallery.innerHTML = uniformes.map(u => {
-    // Intentar WebP primero, fallback a jpg
-    const imgBase = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${u.slug}`;
-    const inactive = u.activo === false;
+    const imgUrl = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${u.slug}/galeria.jpg`;
+    const isInactive = u.activo === false;
 
     return `
       <div class="card-wrapper">
-        ${inactive ? '<span class="badge-unavailable">No disponible</span>' : ''}
-        <a href="uniforme.html?slug=${u.slug}" class="card${inactive ? ' inactive' : ''}">
-          <picture>
-            <source srcset="${imgBase}/galeria.webp" type="image/webp">
-            <img src="${imgBase}/galeria.jpg" alt="${u.nombre}"
-              loading="lazy"
-              onerror="this.closest('picture').parentElement.style.minHeight='200px';this.style.display='none'">
-          </picture>
+        ${isInactive ? '<span class="badge-unavailable">No disponible</span>' : ''}
+        <a href="uniforme.html?slug=${u.slug}" class="card${isInactive ? ' inactive' : ''}">
+          <img src="${imgUrl}" alt="${u.nombre}" loading="lazy"
+            onerror="this.style.minHeight='200px';this.style.background='#1a1a1a';this.removeAttribute('src')">
           <div class="card-info">
             <h3>${u.nombre}</h3>
             <p>${u.tipo || ''}</p>
