@@ -6,20 +6,24 @@
   <title>GZVB | Uniformes de Voleibol</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { padding-top: 70px; }
+    .gallery-loading {
+      grid-column: 1/-1;
+      padding: 60px;
+      text-align: center;
+      color: #555;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+    }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-container">
-    <div class="logo">
-      <img src="1.png" alt="GZVB Logo">
-    </div>
+    <div class="logo"><img src="1.png" alt="GZVB Logo"></div>
     <ul class="nav-menu">
       <li><a href="#">Playeras</a></li>
       <li><a href="#">Shorts</a></li>
@@ -28,7 +32,6 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <div class="overlay">
     <h1>UNIFORMES DE VOLEIBOL</h1>
@@ -36,65 +39,48 @@
   </div>
 </header>
 
-<!-- GALERÍA -->
-<section class="gallery">
-
-  <a href="uniforme-alutemp.html" class="card">
-    <img src="img/Galery alutemp.jpg" alt="Uniforme ALUTEMP">
-    <div class="card-info">
-      <h3>ALUTEMP</h3>
-      <p>Diseño Infantil</p>
-    </div>
-  </a>
-
-  <a href="uniforme-laPiedad.html" class="card">
-    <img src="img/Galery la Piedad.jpg" alt="Uniforme La Piedad">
-    <div class="card-info">
-      <h3>La Piedad</h3>
-      <p>Diseño Competitivo</p>
-    </div>
-  </a>
-
-  <a href="uniforme-panteras.html" class="card">
-    <img src="img/Galery Panteras.jpg" alt="Uniforme Panteras">
-    <div class="card-info">
-      <h3>Panteras</h3>
-      <p>Réplica de Diseño</p>
-    </div>
-  </a>
-
-  <a href="uniforme-tlacuaches.html" class="card">
-    <img src="img/Galery tlacuaches.jpg" alt="Uniforme Tlacuaches">
-    <div class="card-info">
-      <h3>Tlacuaches</h3>
-      <p>Diseño Monocromático</p>
-    </div>
-  </a>
-
-  <a href="uniforme-xolos.html" class="card">
-    <img src="img/Galery xolos.jpg" alt="Uniforme Xolos">
-    <div class="card-info">
-      <h3>Xolos</h3>
-      <p>Diseño Personalizado</p>
-    </div>
-  </a>
-  
-  <a href="uniforme-sirena-bowl.html" class="card">
-    <img src="img/Galery Sirena.jpg" alt="Uniforme Sirena Bowl">
-    <div class="card-info">
-      <h3>Sirena Bowl</h3>
-      <p>Diseño Personalizado</p>
-    </div>
-  </a>
-
+<section class="gallery" id="gallery">
+  <div class="gallery-loading">Cargando uniformes…</div>
 </section>
 
-<!-- WHATSAPP FLOTANTE -->
 <a href="https://wa.link/v7e1yu" class="whatsapp" target="_blank">WhatsApp</a>
 
 <footer>
   <p>© 2026 · Diseño exclusivo de uniformes de voleibol</p>
 </footer>
 
+<script>
+const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+async function cargarGaleria() {
+  const gallery = document.getElementById('gallery');
+  const { data: uniformes, error } = await sb
+    .from('uniformes')
+    .select('*')
+    .order('creado_at', { ascending: true });
+
+  if (error || !uniformes || !uniformes.length) {
+    gallery.innerHTML = '<div class="gallery-loading">No hay uniformes disponibles aún.</div>';
+    return;
+  }
+
+  gallery.innerHTML = uniformes.map(u => {
+    const imgUrl = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${u.slug}/galeria.jpg`;
+    return `
+      <a href="uniforme.html?slug=${u.slug}" class="card">
+        <img src="${imgUrl}" alt="${u.nombre}" onerror="this.style.minHeight='200px';this.style.background='#1a1a1a'">
+        <div class="card-info">
+          <h3>${u.nombre}</h3>
+          <p>${u.tipo || ''}</p>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+cargarGaleria();
+</script>
 </body>
 </html>

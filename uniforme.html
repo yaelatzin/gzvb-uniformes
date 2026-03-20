@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uniforme | GZVB</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { padding-top: 70px; }
+    .loading-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60vh;
+      color: #555;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo"><a href="index.html"><img src="1.png" alt="GZVB Logo"></a></div>
+    <ul class="nav-menu">
+      <li><a href="index.html">← Todos los uniformes</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div id="pageContent">
+  <div class="loading-page">Cargando uniforme…</div>
+</div>
+
+<a href="https://wa.link/v7e1yu" class="whatsapp" target="_blank">WhatsApp</a>
+
+<footer>
+  <p>© 2026 · Diseño exclusivo de uniformes de voleibol</p>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+async function cargarUniforme() {
+  const params = new URLSearchParams(window.location.search);
+  const slug   = params.get('slug');
+
+  if (!slug) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const { data: u, error } = await sb
+    .from('uniformes')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !u) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  document.title = `${u.nombre} | GZVB`;
+
+  // Imágenes del uniforme
+  const baseImg = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${slug}`;
+  const imgs    = [1, 2, 3].map(i =>
+    `<img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
+      onerror="this.style.display='none'">`
+  ).join('');
+
+  document.getElementById('pageContent').innerHTML = `
+    <header class="uniform-hero">
+      <h1>${u.nombre}</h1>
+      <p>Uniforme de voleibol – alto rendimiento</p>
+    </header>
+
+    <section class="uniform-gallery">${imgs}</section>
+
+    <section class="uniform-info">
+      <h2>Concepto del diseño</h2>
+      <p>${u.concepto || ''}</p>
+
+      <ul>
+        <li>Diseñado para voleibol</li>
+        <li>Ideal para equipos competitivos</li>
+        <li>Personalizable en colores y números</li>
+      </ul>
+
+      <div class="btn-actions">
+        <a href="https://wa.link/v7e1yu" class="btn" target="_blank">Cotizar este uniforme</a>
+        <div id="download-btn-container">
+          <span class="no-file-msg">Cargando…</span>
+        </div>
+      </div>
+    </section>`;
+
+  // Cargar botón de descarga
+  loadDownloadButton(slug);
+}
+
+cargarUniforme();
+</script>
+</body>
+</html>
