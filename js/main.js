@@ -1,28 +1,14 @@
 // =============================================
-// CONFIGURACIÓN DE SUPABASE
-// Reemplaza estos valores con los tuyos
-// =============================================
-const SUPABASE_URL = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
-const BUCKET_NAME = 'uniformes';
-
-// =============================================
-// CARGA DE BOTONES DE DESCARGA
-// Se llama en cada página de uniforme
+// BOTÓN DE DESCARGA
+// Usa las constantes definidas en cada página
 // =============================================
 async function loadDownloadButton(uniformSlug) {
   const container = document.getElementById('download-btn-container');
   if (!container) return;
 
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${uniformSlug}/`,
-      { method: 'HEAD' }
-    );
-
-    // Listamos archivos del uniforme via API
     const listRes = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/list/${BUCKET_NAME}`,
+      `${SUPABASE_URL}/storage/v1/object/list/uniformes`,
       {
         method: 'POST',
         headers: {
@@ -41,9 +27,8 @@ async function loadDownloadButton(uniformSlug) {
       return;
     }
 
-    // Generar botones por cada archivo
     const btns = files.map(file => {
-      const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${uniformSlug}/${file.name}`;
+      const url = `${SUPABASE_URL}/storage/v1/object/public/uniformes/${uniformSlug}/${file.name}`;
       const ext = file.name.split('.').pop().toUpperCase();
       return `
         <a href="${url}" download class="btn-download">
