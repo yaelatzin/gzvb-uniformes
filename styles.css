@@ -1,0 +1,533 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap');
+
+/* =========================
+   RESET & BASE
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --black:    #080808;
+  --surface:  #111111;
+  --surface2: #1a1a1a;
+  --border:   #2a2a2a;
+  --white:    #f5f5f5;
+  --muted:    #888;
+  --green:    #25d366;
+  --accent:   #c8ff00;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+}
+
+img { max-width: 100%; display: block; }
+a   { color: inherit; text-decoration: none; }
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+}
+
+.logo img { height: 38px; }
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-menu li a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.nav-menu li a:hover { color: var(--accent); }
+
+/* =========================
+   HERO PRINCIPAL
+========================= */
+.hero {
+  height: 80vh;
+  background: url('../img/header.jpg') center / cover no-repeat;
+  position: relative;
+  padding-top: 70px;
+}
+
+.overlay {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(8,8,8,1));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.overlay h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 6px;
+  line-height: 1;
+}
+
+.overlay p {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* =========================
+   GALERÍA PRINCIPAL
+========================= */
+.gallery {
+  padding: 60px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover img { transform: scale(1.06); }
+
+.card-info {
+  padding: 16px;
+  background: var(--surface2);
+}
+
+.card-info h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: var(--white);
+}
+
+.card-info p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   HERO UNIFORME
+========================= */
+.uniform-hero {
+  padding: 120px 20px 60px;
+  background: linear-gradient(180deg, #000, var(--black));
+  text-align: center;
+}
+
+.uniform-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 4px;
+}
+
+.uniform-hero p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* =========================
+   GALERÍA DEL UNIFORME
+========================= */
+.uniform-gallery {
+  padding: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.uniform-gallery img {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease;
+}
+
+.uniform-gallery img:hover { transform: scale(1.04); }
+
+/* =========================
+   INFO DEL UNIFORME
+========================= */
+.uniform-info {
+  max-width: 860px;
+  margin: auto;
+  padding: 40px 20px 80px;
+}
+
+.uniform-info h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.uniform-info p {
+  color: #ccc;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.uniform-info ul {
+  list-style: none;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uniform-info li {
+  color: #bbb;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uniform-info li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  padding: 14px 28px;
+  background: var(--green);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 40px;
+  letter-spacing: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn:hover { transform: scale(1.05); opacity: 0.9; }
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 40px;
+  border: 1.5px solid var(--accent);
+  letter-spacing: 1px;
+  transition: background 0.2s, color 0.2s;
+  margin-left: 12px;
+}
+
+.btn-download:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.btn-download svg { width: 16px; height: 16px; }
+
+.btn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.btn-actions .btn,
+.btn-actions .btn-download { margin-top: 0; margin-left: 0; }
+
+/* Estado: sin archivo disponible */
+.no-file-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* =========================
+   WHATSAPP FLOTANTE
+========================= */
+.whatsapp {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--green);
+  color: #000;
+  padding: 13px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  z-index: 20;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+  transition: transform 0.2s;
+}
+
+.whatsapp:hover { transform: scale(1.06); }
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+  padding: 30px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  letter-spacing: 1px;
+}
+
+/* =========================
+   ADMIN PANEL
+========================= */
+.admin-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 100px 20px 60px;
+}
+
+.admin-login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.admin-login-card h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.admin-login-card p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.form-group input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus { border-color: var(--accent); }
+
+.btn-admin {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-admin:hover { opacity: 0.85; }
+
+.login-error {
+  color: #ff4d4d;
+  font-size: 0.82rem;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Panel de subida */
+.admin-panel {
+  width: 100%;
+  max-width: 760px;
+  display: none;
+}
+
+.admin-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.admin-panel-header h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 3px;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-logout:hover { border-color: #ff4d4d; color: #ff4d4d; }
+
+.uniform-upload-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.uniform-upload-card h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}
+
+.uniform-upload-card .sub {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+.upload-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.upload-area label.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: var(--surface2);
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--muted);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.upload-area label.upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+.upload-area input[type="file"] { display: none; }
+
+.file-status {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.file-status.uploaded { color: var(--accent); }
+.file-status.uploading { color: #facc15; }
+.file-status.error { color: #ff4d4d; }
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .nav-container { padding: 14px 20px; }
+  .overlay h1, .uniform-hero h1 { font-size: 2.5rem; }
+  .gallery, .uniform-gallery { padding: 24px 16px; }
+  .uniform-info { padding: 24px 16px 60px; }
+  .admin-login-card { padding: 32px 24px; }
+  .uniform-upload-card { flex-direction: column; align-items: flex-start; }
+}

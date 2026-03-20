@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | GZVB</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { padding-top: 0; }
+    .admin-topbar {
+      position: fixed;
+      top: 0; width: 100%;
+      background: rgba(8,8,8,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #2a2a2a;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+    }
+    .admin-topbar span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      color: #c8ff00;
+    }
+    .admin-topbar small { color: #555; font-size: 0.75rem; margin-left: 6px; }
+  </style>
+</head>
+<body>
+
+<div class="admin-topbar">
+  <span>GZVB</span>
+  <small>/ PANEL ADMIN</small>
+</div>
+
+<div class="admin-wrapper">
+
+  <!-- LOGIN -->
+  <div class="admin-login-card" id="loginCard">
+    <h2>Acceso Admin</h2>
+    <p>Ingresa tus credenciales para gestionar los archivos</p>
+
+    <div class="form-group">
+      <label>Correo</label>
+      <input type="email" id="emailInput" placeholder="admin@gzvb.com" autocomplete="username">
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="passInput" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn-admin" onclick="doLogin()">Entrar</button>
+    <p class="login-error" id="loginError">Credenciales incorrectas. Intenta de nuevo.</p>
+  </div>
+
+  <!-- PANEL DE SUBIDA (oculto hasta login) -->
+  <div class="admin-panel" id="adminPanel">
+
+    <div class="admin-panel-header">
+      <h2>Archivos de Uniformes</h2>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+
+    <!-- Cards por uniforme -->
+    <div id="uniformCards"></div>
+
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG SUPABASE ───────────────────────────────────────────
+const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
+const BUCKET        = 'uniformes';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ─── UNIFORMES DISPONIBLES ─────────────────────────────────────
+const UNIFORMES = [
+  { slug: 'alutemp',     nombre: 'ALUTEMP',     tipo: 'Diseño Infantil' },
+  { slug: 'la-piedad',   nombre: 'La Piedad',   tipo: 'Diseño Competitivo' },
+  { slug: 'panteras',    nombre: 'Panteras',    tipo: 'Réplica de Diseño' },
+  { slug: 'tlacuaches',  nombre: 'Tlacuaches',  tipo: 'Diseño Monocromático' },
+  { slug: 'xolos',       nombre: 'Xolos',       tipo: 'Diseño Personalizado' },
+];
+
+// ─── LOGIN ─────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('emailInput').value.trim();
+  const pass  = document.getElementById('passInput').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    errEl.style.display = 'block';
+    return;
+  }
+
+  showPanel();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('loginCard').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+// ─── MOSTRAR PANEL ─────────────────────────────────────────────
+async function showPanel() {
+  document.getElementById('loginCard').style.display  = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  renderCards();
+}
+
+// ─── RENDERIZAR CARDS ──────────────────────────────────────────
+async function renderCards() {
+  const container = document.getElementById('uniformCards');
+  container.innerHTML = '';
+
+  for (const u of UNIFORMES) {
+    // Listar archivos existentes
+    const { data: files } = await sb.storage
+      .from(BUCKET)
+      .list(u.slug, { limit: 10 });
+
+    const fileList = (files && files.length)
+      ? files.map(f =>
+          `<span class="file-status uploaded">✔ ${f.name}</span>`
+        ).join(' &nbsp;')
+      : `<span class="file-status">Sin archivos</span>`;
+
+    container.innerHTML += `
+      <div class="uniform-upload-card" id="card-${u.slug}">
+        <div>
+          <h3>${u.nombre}</h3>
+          <div class="sub">${u.tipo}</div>
+          <div style="margin-top:8px" id="files-${u.slug}">${fileList}</div>
+        </div>
+        <div class="upload-area">
+          <label class="upload-btn" for="file-${u.slug}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            Subir archivo
+          </label>
+          <input type="file" id="file-${u.slug}" accept=".pdf,.ai,.cdr"
+            onchange="uploadFile('${u.slug}', this)">
+        </div>
+      </div>`;
+  }
+}
+
+// ─── SUBIR ARCHIVO ─────────────────────────────────────────────
+async function uploadFile(slug, input) {
+  if (!input.files || !input.files[0]) return;
+  const file     = input.files[0];
+  const path     = `${slug}/${file.name}`;
+  const statusEl = document.getElementById(`files-${slug}`);
+
+  statusEl.innerHTML = `<span class="file-status uploading">⏳ Subiendo ${file.name}…</span>`;
+
+  const { error } = await sb.storage
+    .from(BUCKET)
+    .upload(path, file, { upsert: true });
+
+  if (error) {
+    statusEl.innerHTML = `<span class="file-status error">✖ Error: ${error.message}</span>`;
+    return;
+  }
+
+  statusEl.innerHTML = `<span class="file-status uploaded">✔ ${file.name} subido correctamente</span>`;
+
+  // Recargar lista completa después de 1.5s
+  setTimeout(() => renderCards(), 1500);
+}
+
+// ─── AUTO-LOGIN si ya hay sesión activa ────────────────────────
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showPanel();
+})();
+</script>
+
+</body>
+</html>
