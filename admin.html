@@ -10,91 +10,47 @@
     body { padding-top: 0; }
 
     .admin-topbar {
-      position: fixed;
-      top: 0; width: 100%;
-      background: rgba(8,8,8,0.95);
-      backdrop-filter: blur(12px);
+      position: fixed; top: 0; width: 100%;
+      background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
       border-bottom: 1px solid #2a2a2a;
-      padding: 16px 40px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 100;
+      padding: 16px 40px; display: flex; align-items: center; gap: 12px; z-index: 100;
     }
-    .admin-topbar span {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: 3px;
-      color: #c8ff00;
-    }
+    .admin-topbar span { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: #c8ff00; }
     .admin-topbar small { color: #555; font-size: 0.75rem; margin-left: 6px; }
 
-    .admin-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-      border-bottom: 1px solid #2a2a2a;
-    }
+    .admin-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid #2a2a2a; }
     .tab-btn {
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: #555;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1rem;
-      letter-spacing: 2px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-      margin-bottom: -1px;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: #555; font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
+      letter-spacing: 2px; padding: 10px 20px; cursor: pointer;
+      transition: color 0.2s, border-color 0.2s; margin-bottom: -1px;
     }
     .tab-btn.active { color: #c8ff00; border-bottom-color: #c8ff00; }
     .tab-btn:hover  { color: #fff; }
-
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* Formularios */
     .new-uniform-form {
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 680px;
+      background: #111; border: 1px solid #2a2a2a; border-radius: 16px;
+      padding: 32px; max-width: 680px;
     }
-    .new-uniform-form h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      margin-bottom: 24px;
-    }
+    .new-uniform-form h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 24px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group textarea {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: #f5f5f5;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      resize: vertical;
-      min-height: 100px;
-      width: 100%;
-      transition: border-color 0.2s;
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 12px 16px; color: #f5f5f5; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; outline: none; resize: vertical; min-height: 100px;
+      width: 100%; transition: border-color 0.2s;
     }
     .form-group textarea:focus { border-color: #c8ff00; }
 
     .img-upload-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 8px; }
     .img-upload-box {
-      background: #1a1a1a;
-      border: 1.5px dashed #2a2a2a;
-      border-radius: 10px;
-      aspect-ratio: 1;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.2s;
-      overflow: hidden; position: relative;
+      background: #1a1a1a; border: 1.5px dashed #2a2a2a; border-radius: 10px;
+      aspect-ratio: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; cursor: pointer;
+      transition: border-color 0.2s; overflow: hidden; position: relative;
     }
     .img-upload-box:hover { border-color: #c8ff00; }
     .img-upload-box input { display: none; }
@@ -102,11 +58,8 @@
     .img-upload-box img.preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
     .galeria-upload-box {
-      background: #1a1a1a;
-      border: 1.5px dashed #2a2a2a;
-      border-radius: 10px;
-      padding: 20px;
-      display: flex; align-items: center; gap: 12px;
+      background: #1a1a1a; border: 1.5px dashed #2a2a2a; border-radius: 10px;
+      padding: 20px; display: flex; align-items: center; gap: 12px;
       cursor: pointer; transition: border-color 0.2s; margin-top: 8px;
     }
     .galeria-upload-box:hover { border-color: #c8ff00; }
@@ -120,95 +73,65 @@
     .form-status.error   { color: #ff4d4d; }
     .form-status.loading { color: #facc15; }
 
-    /* Cards uniformes */
+    /* Edit list */
+    .edit-list { display: flex; flex-direction: column; gap: 12px; max-width: 680px; }
+    .edit-card {
+      background: #111; border: 1px solid #2a2a2a; border-radius: 14px;
+      overflow: hidden;
+    }
+    .edit-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; cursor: pointer; transition: background 0.2s;
+    }
+    .edit-card-header:hover { background: #1a1a1a; }
+    .edit-card-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; }
+    .edit-card-header .sub { color: #555; font-size: 0.78rem; margin-top: 2px; }
+    .edit-chevron { color: #555; font-size: 0.9rem; transition: transform 0.2s; }
+    .edit-card.open .edit-chevron { transform: rotate(180deg); }
+
+    .edit-card-body { display: none; padding: 0 20px 20px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
+    .edit-card.open .edit-card-body { display: block; }
+
+    /* Cards de archivos */
     .uniform-upload-card {
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 14px;
-      padding: 20px 24px;
-      margin-bottom: 14px;
-      transition: border-color 0.2s;
+      background: #111; border: 1px solid #2a2a2a; border-radius: 14px;
+      padding: 20px 24px; margin-bottom: 14px; transition: border-color 0.2s;
     }
     .uniform-upload-card.card-inactive { border-color: #1a1a1a; opacity: 0.7; }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+    .card-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
     .card-top h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
     .card-top .sub { color: #555; font-size: 0.78rem; margin-top: 2px; }
-
     .card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    /* Toggles */
     .toggle-group { display: flex; flex-direction: column; gap: 6px; }
-    .toggle-wrap {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 0.75rem; color: #888;
-    }
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: #888; }
     .toggle { position: relative; width: 36px; height: 20px; }
     .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider {
-      position: absolute; inset: 0;
-      background: #2a2a2a; border-radius: 20px;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .toggle-slider:before {
-      content: '';
-      position: absolute;
-      width: 14px; height: 14px;
-      left: 3px; bottom: 3px;
-      background: #555; border-radius: 50%;
-      transition: transform 0.2s, background 0.2s;
-    }
+    .toggle-slider { position: absolute; inset: 0; background: #2a2a2a; border-radius: 20px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; bottom: 3px; background: #555; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
     .toggle input:checked + .toggle-slider { background: rgba(200,255,0,0.15); }
     .toggle input:checked + .toggle-slider:before { transform: translateX(16px); background: #c8ff00; }
 
-    /* Upload / delete buttons */
     .upload-area { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .upload-area label.upload-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px;
-      background: #1a1a1a; border: 1.5px dashed #2a2a2a;
-      border-radius: 8px; cursor: pointer;
-      font-size: 0.76rem; color: #888;
-      transition: border-color 0.2s, color 0.2s;
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+      background: #1a1a1a; border: 1.5px dashed #2a2a2a; border-radius: 8px;
+      cursor: pointer; font-size: 0.76rem; color: #888; transition: border-color 0.2s, color 0.2s;
     }
     .upload-area label.upload-btn:hover { border-color: #c8ff00; color: #c8ff00; }
     .upload-area input[type="file"] { display: none; }
 
     .btn-delete-all {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 12px;
-      background: transparent; border: 1.5px solid #2a1a1a;
-      border-radius: 8px; cursor: pointer;
-      font-size: 0.76rem; color: #ff4d4d;
-      font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s, border-color 0.2s;
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px;
+      background: transparent; border: 1.5px solid #2a1a1a; border-radius: 8px;
+      cursor: pointer; font-size: 0.76rem; color: #ff4d4d;
+      font-family: 'DM Sans', sans-serif; transition: background 0.2s, border-color 0.2s;
     }
     .btn-delete-all:hover { background: rgba(255,77,77,0.08); border-color: #ff4d4d; }
 
-    /* Archivos */
-    .file-list {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-top: 12px; padding-top: 12px;
-      border-top: 1px solid #1a1a1a;
-    }
-    .file-item {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #1a1a1a; border: 1px solid #2a2a2a;
-      border-radius: 6px; padding: 5px 10px;
-      font-size: 0.76rem; color: #c8ff00;
-    }
-    .btn-delete-file {
-      background: none; border: none; color: #444;
-      cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0;
-      transition: color 0.2s;
-    }
+    .file-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #1a1a1a; }
+    .file-item { display: inline-flex; align-items: center; gap: 6px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 5px 10px; font-size: 0.76rem; color: #c8ff00; }
+    .btn-delete-file { background: none; border: none; color: #444; cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0; transition: color 0.2s; }
     .btn-delete-file:hover { color: #ff4d4d; }
 
     .file-status { font-size: 0.76rem; }
@@ -245,7 +168,6 @@
 
   <!-- PANEL -->
   <div class="admin-panel" id="adminPanel">
-
     <div class="admin-panel-header">
       <h2>Panel de Administración</h2>
       <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
@@ -253,10 +175,11 @@
 
     <div class="admin-tabs">
       <button class="tab-btn active" onclick="switchTab('nuevo', this)">+ Nuevo Uniforme</button>
-      <button class="tab-btn" onclick="switchTab('archivos', this)">Archivos Descargables</button>
+      <button class="tab-btn" onclick="switchTab('editar', this)">✏ Editar</button>
+      <button class="tab-btn" onclick="switchTab('archivos', this)">Archivos</button>
     </div>
 
-    <!-- TAB: NUEVO UNIFORME -->
+    <!-- TAB: NUEVO -->
     <div class="tab-content active" id="tab-nuevo">
       <div class="new-uniform-form">
         <h3>Agregar Nuevo Uniforme</h3>
@@ -272,46 +195,24 @@
         </div>
         <div class="form-group" style="margin-top:16px">
           <label>Concepto del diseño</label>
-          <textarea id="uConcepto" placeholder="Describe el concepto, inspiración y características del uniforme…"></textarea>
+          <textarea id="uConcepto" placeholder="Describe el concepto…"></textarea>
         </div>
         <div class="form-group" style="margin-top:16px">
           <label>Imagen de galería (portada)</label>
           <div class="galeria-upload-box" onclick="document.getElementById('imgGaleria').click()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
             </svg>
             <span id="galeriaName">Seleccionar imagen de portada (JPG/PNG)</span>
-            <input type="file" id="imgGaleria" accept="image/*" onchange="previewGaleria(this)">
+            <input type="file" id="imgGaleria" accept="image/*" onchange="previewGaleria(this, 'galeriaName')">
           </div>
         </div>
         <div class="form-group" style="margin-top:16px">
           <label>Fotos del uniforme (hasta 3)</label>
           <div class="img-upload-grid">
-            <label class="img-upload-box">
-              <input type="file" id="foto1" accept="image/*" onchange="previewFoto(this,'prev1')">
-              <img id="prev1" class="preview" style="display:none">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-              <span>Foto 1</span>
-            </label>
-            <label class="img-upload-box">
-              <input type="file" id="foto2" accept="image/*" onchange="previewFoto(this,'prev2')">
-              <img id="prev2" class="preview" style="display:none">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-              <span>Foto 2</span>
-            </label>
-            <label class="img-upload-box">
-              <input type="file" id="foto3" accept="image/*" onchange="previewFoto(this,'prev3')">
-              <img id="prev3" class="preview" style="display:none">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-              <span>Foto 3</span>
-            </label>
+            <label class="img-upload-box"><input type="file" id="foto1" accept="image/*" onchange="previewFoto(this,'prev1')"><img id="prev1" class="preview" style="display:none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Foto 1</span></label>
+            <label class="img-upload-box"><input type="file" id="foto2" accept="image/*" onchange="previewFoto(this,'prev2')"><img id="prev2" class="preview" style="display:none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Foto 2</span></label>
+            <label class="img-upload-box"><input type="file" id="foto3" accept="image/*" onchange="previewFoto(this,'prev3')"><img id="prev3" class="preview" style="display:none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Foto 3</span></label>
           </div>
         </div>
         <div class="form-submit-area">
@@ -321,11 +222,17 @@
       </div>
     </div>
 
+    <!-- TAB: EDITAR -->
+    <div class="tab-content" id="tab-editar">
+      <div class="edit-list" id="editList">
+        <p style="color:#555;font-size:0.85rem">Cargando uniformes…</p>
+      </div>
+    </div>
+
     <!-- TAB: ARCHIVOS -->
     <div class="tab-content" id="tab-archivos">
       <div id="uniformCards"></div>
     </div>
-
   </div>
 </div>
 
@@ -344,6 +251,7 @@ function switchTab(tab, btn) {
   document.getElementById(`tab-${tab}`).classList.add('active');
   btn.classList.add('active');
   if (tab === 'archivos') renderCards();
+  if (tab === 'editar')   renderEditList();
 }
 
 // ─── PREVIEWS ─────────────────────────────────────────────────
@@ -351,8 +259,8 @@ function previewFoto(input, id) {
   const prev = document.getElementById(id);
   if (input.files?.[0]) { prev.src = URL.createObjectURL(input.files[0]); prev.style.display = 'block'; }
 }
-function previewGaleria(input) {
-  const el = document.getElementById('galeriaName');
+function previewGaleria(input, nameId) {
+  const el = document.getElementById(nameId);
   if (input.files?.[0]) { el.textContent = input.files[0].name; el.className = 'preview-name'; }
 }
 
@@ -396,10 +304,7 @@ async function crearUniforme() {
   const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto, activo: true, descargas_activas: true });
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
-  if (imgGal) {
-    statusEl.textContent = '⏳ Subiendo portada…';
-    await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true });
-  }
+  if (imgGal) { statusEl.textContent = '⏳ Subiendo portada…'; await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true }); }
   for (let i = 1; i <= 3; i++) {
     const file = document.getElementById(`foto${i}`).files[0];
     if (file) { statusEl.textContent = `⏳ Subiendo foto ${i}…`; await sb.storage.from(BUCKET_IMGS).upload(`${slug}/foto-${i}.jpg`, file, { upsert: true }); }
@@ -407,9 +312,7 @@ async function crearUniforme() {
 
   statusEl.className = 'form-status success';
   statusEl.textContent = `✔ "${nombre}" creado exitosamente.`;
-  document.getElementById('uNombre').value = '';
-  document.getElementById('uTipo').value = '';
-  document.getElementById('uConcepto').value = '';
+  ['uNombre','uTipo','uConcepto'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('imgGaleria').value = '';
   document.getElementById('galeriaName').textContent = 'Seleccionar imagen de portada (JPG/PNG)';
   document.getElementById('galeriaName').className = '';
@@ -417,73 +320,165 @@ async function crearUniforme() {
   ['foto1','foto2','foto3'].forEach(id => document.getElementById(id).value = '');
 }
 
-// ─── RENDERIZAR CARDS ──────────────────────────────────────────
+// ─── EDITAR UNIFORMES ──────────────────────────────────────────
+async function renderEditList() {
+  const container = document.getElementById('editList');
+  container.innerHTML = '<p style="color:#555;font-size:0.85rem">Cargando…</p>';
+
+  const { data: uniformes } = await sb.from('uniformes').select('*').order('creado_at', { ascending: true });
+  if (!uniformes?.length) { container.innerHTML = '<p style="color:#555">No hay uniformes.</p>'; return; }
+
+  container.innerHTML = uniformes.map(u => `
+    <div class="edit-card" id="edit-card-${u.id}">
+      <div class="edit-card-header" onclick="toggleEditCard('${u.id}')">
+        <div>
+          <h3>${u.nombre}</h3>
+          <div class="sub">${u.tipo || ''}</div>
+        </div>
+        <span class="edit-chevron">▼</span>
+      </div>
+      <div class="edit-card-body">
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="edit-nombre-${u.id}" value="${u.nombre}">
+          </div>
+          <div class="form-group">
+            <label>Tipo / descripción corta</label>
+            <input type="text" id="edit-tipo-${u.id}" value="${u.tipo || ''}">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label>Concepto del diseño</label>
+          <textarea id="edit-concepto-${u.id}">${u.concepto || ''}</textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label>Imagen de portada (dejar vacío para mantener la actual)</label>
+          <div class="galeria-upload-box" onclick="document.getElementById('edit-galeria-${u.id}').click()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span id="edit-galeria-name-${u.id}">Seleccionar nueva portada</span>
+            <input type="file" id="edit-galeria-${u.id}" accept="image/*"
+              onchange="previewGaleria(this, 'edit-galeria-name-${u.id}')">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:20px">
+          <label>Fotos del uniforme (dejar vacío para mantener las actuales)</label>
+          <div class="img-upload-grid">
+            <label class="img-upload-box">
+              <input type="file" id="edit-foto1-${u.id}" accept="image/*" onchange="previewFoto(this,'edit-prev1-${u.id}')">
+              <img id="edit-prev1-${u.id}" class="preview" src="${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMGS}/${u.slug}/foto-1.jpg" onerror="this.style.display='none'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Foto 1</span>
+            </label>
+            <label class="img-upload-box">
+              <input type="file" id="edit-foto2-${u.id}" accept="image/*" onchange="previewFoto(this,'edit-prev2-${u.id}')">
+              <img id="edit-prev2-${u.id}" class="preview" src="${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMGS}/${u.slug}/foto-2.jpg" onerror="this.style.display='none'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Foto 2</span>
+            </label>
+            <label class="img-upload-box">
+              <input type="file" id="edit-foto3-${u.id}" accept="image/*" onchange="previewFoto(this,'edit-prev3-${u.id}')">
+              <img id="edit-prev3-${u.id}" class="preview" src="${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMGS}/${u.slug}/foto-3.jpg" onerror="this.style.display='none'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Foto 3</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-submit-area">
+          <button class="btn-admin" style="width:auto;padding:10px 28px" onclick="guardarEdicion('${u.id}','${u.slug}')">
+            Guardar cambios
+          </button>
+          <span class="form-status" id="edit-status-${u.id}"></span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleEditCard(id) {
+  document.getElementById(`edit-card-${id}`).classList.toggle('open');
+}
+
+async function guardarEdicion(id, slug) {
+  const nombre   = document.getElementById(`edit-nombre-${id}`).value.trim();
+  const tipo     = document.getElementById(`edit-tipo-${id}`).value.trim();
+  const concepto = document.getElementById(`edit-concepto-${id}`).value.trim();
+  const imgGal   = document.getElementById(`edit-galeria-${id}`).files[0];
+  const statusEl = document.getElementById(`edit-status-${id}`);
+
+  if (!nombre) { statusEl.className = 'form-status error'; statusEl.textContent = '⚠ El nombre es obligatorio.'; return; }
+
+  statusEl.className = 'form-status loading';
+  statusEl.textContent = '⏳ Guardando…';
+
+  // Actualizar texto en BD
+  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto }).eq('id', id);
+  if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
+
+  // Actualizar portada si se seleccionó una nueva
+  if (imgGal) {
+    statusEl.textContent = '⏳ Subiendo portada…';
+    await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true });
+  }
+
+  // Actualizar fotos si se seleccionaron nuevas
+  for (let i = 1; i <= 3; i++) {
+    const file = document.getElementById(`edit-foto${i}-${id}`).files[0];
+    if (file) {
+      statusEl.textContent = `⏳ Subiendo foto ${i}…`;
+      await sb.storage.from(BUCKET_IMGS).upload(`${slug}/foto-${i}.jpg`, file, { upsert: true });
+    }
+  }
+
+  statusEl.className = 'form-status success';
+  statusEl.textContent = '✔ Cambios guardados exitosamente.';
+
+  // Actualizar header de la card
+  document.querySelector(`#edit-card-${id} .edit-card-header h3`).textContent = nombre;
+  document.querySelector(`#edit-card-${id} .edit-card-header .sub`).textContent = tipo;
+}
+
+// ─── ARCHIVOS ──────────────────────────────────────────────────
 async function renderCards() {
   const container = document.getElementById('uniformCards');
   container.innerHTML = '<p style="color:#555;font-size:0.85rem;padding:20px 0">Cargando…</p>';
 
   const { data: uniformes } = await sb.from('uniformes').select('*').order('creado_at', { ascending: true });
-
-  if (!uniformes?.length) { container.innerHTML = '<p style="color:#555">No hay uniformes creados aún.</p>'; return; }
+  if (!uniformes?.length) { container.innerHTML = '<p style="color:#555">No hay uniformes.</p>'; return; }
 
   container.innerHTML = '';
-
   for (const u of uniformes) {
     const { data: files } = await sb.storage.from(BUCKET_FILES).list(u.slug, { limit: 20 });
-    const activo   = u.activo !== false;
+    const activo     = u.activo !== false;
     const descActiva = u.descargas_activas !== false;
 
     const fileItems = files?.length
-      ? files.map(f => `
-          <div class="file-item">${f.name}
-            <button class="btn-delete-file" onclick="deleteFile('${u.slug}','${f.name}')">✕</button>
-          </div>`).join('')
+      ? files.map(f => `<div class="file-item">${f.name}<button class="btn-delete-file" onclick="deleteFile('${u.slug}','${f.name}')">✕</button></div>`).join('')
       : `<p class="no-files-msg">Sin archivos subidos</p>`;
 
     container.innerHTML += `
       <div class="uniform-upload-card${activo ? '' : ' card-inactive'}" id="card-${u.slug}">
         <div class="card-top">
-          <div>
-            <h3>${u.nombre}</h3>
-            <div class="sub">${u.tipo || ''}</div>
-          </div>
+          <div><h3>${u.nombre}</h3><div class="sub">${u.tipo || ''}</div></div>
           <div class="card-actions">
             <div class="toggle-group">
               <div class="toggle-wrap">
                 <span>${activo ? 'Diseño activo' : 'Diseño inactivo'}</span>
-                <label class="toggle">
-                  <input type="checkbox" ${activo ? 'checked' : ''}
-                    onchange="toggleActivo('${u.id}', this)">
-                  <span class="toggle-slider"></span>
-                </label>
+                <label class="toggle"><input type="checkbox" ${activo ? 'checked' : ''} onchange="toggleActivo('${u.id}', this)"><span class="toggle-slider"></span></label>
               </div>
               <div class="toggle-wrap">
                 <span>${descActiva ? 'Descarga activa' : 'Descarga desactivada'}</span>
-                <label class="toggle">
-                  <input type="checkbox" ${descActiva ? 'checked' : ''}
-                    onchange="toggleDescargas('${u.id}', this)">
-                  <span class="toggle-slider"></span>
-                </label>
+                <label class="toggle"><input type="checkbox" ${descActiva ? 'checked' : ''} onchange="toggleDescargas('${u.id}', this)"><span class="toggle-slider"></span></label>
               </div>
             </div>
             <div class="upload-area">
               <label class="upload-btn" for="file-${u.slug}">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 Subir archivo
               </label>
               <input type="file" id="file-${u.slug}" accept=".pdf,.ai,.cdr" onchange="uploadFile('${u.slug}',this)">
-              ${files?.length ? `
-              <button class="btn-delete-all" onclick="deleteAllFiles('${u.slug}')">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="3 6 5 6 21 6"/>
-                  <path d="M19 6l-1 14H6L5 6"/>
-                </svg>
-                Eliminar todos
-              </button>` : ''}
+              ${files?.length ? `<button class="btn-delete-all" onclick="deleteAllFiles('${u.slug}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Eliminar todos</button>` : ''}
             </div>
           </div>
         </div>
@@ -492,24 +487,19 @@ async function renderCards() {
   }
 }
 
-// ─── TOGGLES ───────────────────────────────────────────────────
 async function toggleActivo(id, checkbox) {
   const activo = checkbox.checked;
-  const label  = checkbox.closest('.toggle-wrap').querySelector('span');
-  label.textContent = activo ? 'Diseño activo' : 'Diseño inactivo';
-  const card = checkbox.closest('.uniform-upload-card');
-  card.classList.toggle('card-inactive', !activo);
+  checkbox.closest('.toggle-wrap').querySelector('span').textContent = activo ? 'Diseño activo' : 'Diseño inactivo';
+  checkbox.closest('.uniform-upload-card').classList.toggle('card-inactive', !activo);
   await sb.from('uniformes').update({ activo }).eq('id', id);
 }
 
 async function toggleDescargas(id, checkbox) {
   const activo = checkbox.checked;
-  const label  = checkbox.closest('.toggle-wrap').querySelector('span');
-  label.textContent = activo ? 'Descarga activa' : 'Descarga desactivada';
+  checkbox.closest('.toggle-wrap').querySelector('span').textContent = activo ? 'Descarga activa' : 'Descarga desactivada';
   await sb.from('uniformes').update({ descargas_activas: activo }).eq('id', id);
 }
 
-// ─── ARCHIVOS ──────────────────────────────────────────────────
 async function uploadFile(slug, input) {
   if (!input.files?.[0]) return;
   const file = input.files[0];
@@ -528,7 +518,7 @@ async function deleteFile(slug, fileName) {
 }
 
 async function deleteAllFiles(slug) {
-  if (!confirm(`¿Eliminar TODOS los archivos de este uniforme?`)) return;
+  if (!confirm('¿Eliminar TODOS los archivos de este uniforme?')) return;
   const { data: files } = await sb.storage.from(BUCKET_FILES).list(slug, { limit: 50 });
   if (!files?.length) return;
   const { error } = await sb.storage.from(BUCKET_FILES).remove(files.map(f => `${slug}/${f.name}`));
