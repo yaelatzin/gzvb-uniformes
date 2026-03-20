@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
     body { padding-top: 70px; }
 
@@ -48,6 +49,39 @@
       grid-column: 1/-1; padding: 60px; text-align: center;
       color: #555; font-size: 0.9rem; letter-spacing: 2px;
     }
+	
+	/* Hamburguesa */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.nav-menu.open {
+  display: flex !important;
+  flex-direction: column;
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  background: rgba(8,8,8,0.98);
+  padding: 16px 20px;
+  gap: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+@media (max-width: 480px) {
+  .hamburger { display: flex; }
+}
+	
   </style>
 </head>
 <body>
@@ -62,6 +96,9 @@
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo"><img src="1.png" alt="GZVB Logo"></div>
+	<div class="hamburger" onclick="this.nextElementSibling.classList.toggle('open')" id="hamburger">
+	  <span></span><span></span><span></span>
+	</div>
     <ul class="nav-menu">
       <li><a href="#">Playeras</a></li>
       <li><a href="#">Shorts</a></li>
