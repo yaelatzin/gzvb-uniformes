@@ -34,7 +34,6 @@
       gap: 8px;
       margin-bottom: 32px;
       border-bottom: 1px solid #2a2a2a;
-      padding-bottom: 0;
     }
     .tab-btn {
       background: none;
@@ -63,20 +62,17 @@
       padding: 32px;
       max-width: 680px;
     }
-
     .new-uniform-form h3 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.5rem;
       letter-spacing: 2px;
       margin-bottom: 24px;
     }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
-
     .form-group textarea {
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
@@ -99,7 +95,6 @@
       gap: 12px;
       margin-top: 8px;
     }
-
     .img-upload-box {
       background: #1a1a1a;
       border: 1.5px dashed #2a2a2a;
@@ -118,13 +113,9 @@
     .img-upload-box input { display: none; }
     .img-upload-box span { color: #555; font-size: 0.75rem; margin-top: 6px; }
     .img-upload-box img.preview {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
     }
-
     .galeria-upload-box {
       background: #1a1a1a;
       border: 1.5px dashed #2a2a2a;
@@ -148,18 +139,162 @@
       align-items: center;
       gap: 16px;
     }
-
-    .form-status {
-      font-size: 0.82rem;
-    }
+    .form-status { font-size: 0.82rem; }
     .form-status.success { color: #c8ff00; }
     .form-status.error   { color: #ff4d4d; }
     .form-status.loading { color: #facc15; }
 
-    @media (max-width: 600px) {
-      .form-row { grid-template-columns: 1fr; }
-      .img-upload-grid { grid-template-columns: repeat(3, 1fr); }
+    /* Cards de archivos */
+    .uniform-upload-card {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
     }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-top h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .card-top .sub {
+      color: #555;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Toggle switch */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: #888;
+    }
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #2a2a2a;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 3px; bottom: 3px;
+      background: #555;
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: rgba(200,255,0,0.2); }
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(18px);
+      background: #c8ff00;
+    }
+
+    /* Botones de subir / eliminar todo */
+    .upload-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .upload-area label.upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #1a1a1a;
+      border: 1.5px dashed #2a2a2a;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: #888;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .upload-area label.upload-btn:hover { border-color: #c8ff00; color: #c8ff00; }
+    .upload-area input[type="file"] { display: none; }
+
+    .btn-delete-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: transparent;
+      border: 1.5px solid #3a1a1a;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: #ff4d4d;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-delete-all:hover { background: rgba(255,77,77,0.1); border-color: #ff4d4d; }
+
+    /* Lista de archivos */
+    .file-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #1a1a1a;
+    }
+    .file-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      color: #c8ff00;
+    }
+    .btn-delete-file {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .btn-delete-file:hover { color: #ff4d4d; }
+
+    .file-status { font-size: 0.78rem; }
+    .file-status.uploaded  { color: #c8ff00; }
+    .file-status.uploading { color: #facc15; }
+    .file-status.error     { color: #ff4d4d; }
+
+    .no-files-msg { color: #444; font-size: 0.78rem; padding-top: 10px; }
   </style>
 </head>
 <body>
@@ -195,17 +330,15 @@
       <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
     </div>
 
-    <!-- TABS -->
     <div class="admin-tabs">
-      <button class="tab-btn active" onclick="switchTab('nuevo')">+ Nuevo Uniforme</button>
-      <button class="tab-btn" onclick="switchTab('archivos')">Archivos Descargables</button>
+      <button class="tab-btn active" onclick="switchTab('nuevo', this)">+ Nuevo Uniforme</button>
+      <button class="tab-btn" onclick="switchTab('archivos', this)">Archivos Descargables</button>
     </div>
 
     <!-- TAB: NUEVO UNIFORME -->
     <div class="tab-content active" id="tab-nuevo">
       <div class="new-uniform-form">
         <h3>Agregar Nuevo Uniforme</h3>
-
         <div class="form-row">
           <div class="form-group">
             <label>Nombre del uniforme</label>
@@ -216,12 +349,10 @@
             <input type="text" id="uTipo" placeholder="Ej: Diseño Personalizado">
           </div>
         </div>
-
         <div class="form-group" style="margin-top:16px">
           <label>Concepto del diseño</label>
           <textarea id="uConcepto" placeholder="Describe el concepto, inspiración y características del uniforme…"></textarea>
         </div>
-
         <div class="form-group" style="margin-top:16px">
           <label>Imagen de galería (portada en la página principal)</label>
           <div class="galeria-upload-box" onclick="document.getElementById('imgGaleria').click()">
@@ -233,7 +364,6 @@
             <input type="file" id="imgGaleria" accept="image/*" onchange="previewGaleria(this)">
           </div>
         </div>
-
         <div class="form-group" style="margin-top:16px">
           <label>Fotos del uniforme (hasta 3 imágenes)</label>
           <div class="img-upload-grid">
@@ -263,11 +393,8 @@
             </label>
           </div>
         </div>
-
         <div class="form-submit-area">
-          <button class="btn-admin" style="width:auto;padding:12px 32px" onclick="crearUniforme()">
-            Crear Uniforme
-          </button>
+          <button class="btn-admin" style="width:auto;padding:12px 32px" onclick="crearUniforme()">Crear Uniforme</button>
           <span class="form-status" id="formStatus"></span>
         </div>
       </div>
@@ -284,22 +411,22 @@
 <script>
 const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
-const BUCKET_IMGS   = 'imagenes-uniformes';
-const BUCKET_FILES  = 'uniformes';
+const BUCKET_IMGS  = 'imagenes-uniformes';
+const BUCKET_FILES = 'uniformes';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 // ─── TABS ──────────────────────────────────────────────────────
-function switchTab(tab) {
+function switchTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
-  event.target.classList.add('active');
+  btn.classList.add('active');
   if (tab === 'archivos') renderCards();
 }
 
-// ─── PREVIEW IMÁGENES ──────────────────────────────────────────
+// ─── PREVIEWS ─────────────────────────────────────────────────
 function previewFoto(input, previewId) {
   const prev = document.getElementById(previewId);
   if (input.files && input.files[0]) {
@@ -307,7 +434,6 @@ function previewFoto(input, previewId) {
     prev.style.display = 'block';
   }
 }
-
 function previewGaleria(input) {
   const nameEl = document.getElementById('galeriaName');
   if (input.files && input.files[0]) {
@@ -322,18 +448,15 @@ async function doLogin() {
   const pass  = document.getElementById('passInput').value;
   const errEl = document.getElementById('loginError');
   errEl.style.display = 'none';
-
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) { errEl.style.display = 'block'; return; }
   showPanel();
 }
-
 async function doLogout() {
   await sb.auth.signOut();
   document.getElementById('loginCard').style.display = 'block';
   document.getElementById('adminPanel').style.display = 'none';
 }
-
 async function showPanel() {
   document.getElementById('loginCard').style.display  = 'none';
   document.getElementById('adminPanel').style.display = 'block';
@@ -353,36 +476,25 @@ async function crearUniforme() {
     return;
   }
 
-  // Generar slug
   const slug = nombre.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
   statusEl.className = 'form-status loading';
   statusEl.textContent = '⏳ Guardando uniforme…';
 
-  // 1. Insertar en la base de datos
-  const { error: dbErr } = await sb.from('uniformes').insert({
-    slug, nombre, tipo, concepto
-  });
-
+  const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto });
   if (dbErr) {
     statusEl.className = 'form-status error';
     statusEl.textContent = `✖ Error: ${dbErr.message}`;
     return;
   }
 
-  // 2. Subir imagen de galería (portada)
   if (imgGal) {
     statusEl.textContent = '⏳ Subiendo imagen de portada…';
-    const ext = imgGal.name.split('.').pop();
-    await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.${ext}`, imgGal, { upsert: true });
-    // Renombrar a galeria.jpg para consistencia si es necesario
     await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true });
   }
 
-  // 3. Subir fotos del uniforme
   for (let i = 1; i <= 3; i++) {
     const file = document.getElementById(`foto${i}`).files[0];
     if (file) {
@@ -394,30 +506,23 @@ async function crearUniforme() {
   statusEl.className = 'form-status success';
   statusEl.textContent = `✔ Uniforme "${nombre}" creado exitosamente.`;
 
-  // Limpiar formulario
-  document.getElementById('uNombre').value    = '';
-  document.getElementById('uTipo').value      = '';
-  document.getElementById('uConcepto').value  = '';
+  document.getElementById('uNombre').value   = '';
+  document.getElementById('uTipo').value     = '';
+  document.getElementById('uConcepto').value = '';
   document.getElementById('imgGaleria').value = '';
   document.getElementById('galeriaName').textContent = 'Seleccionar imagen de portada (JPG/PNG)';
   document.getElementById('galeriaName').className = '';
-  ['prev1','prev2','prev3'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
-  ['foto1','foto2','foto3'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
+  ['prev1','prev2','prev3'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['foto1','foto2','foto3'].forEach(id => document.getElementById(id).value = '');
 }
 
-// ─── ARCHIVOS DESCARGABLES ────────────────────────────────────
+// ─── RENDERIZAR CARDS DE ARCHIVOS ─────────────────────────────
 async function renderCards() {
   const container = document.getElementById('uniformCards');
   container.innerHTML = '<p style="color:#555;font-size:0.85rem;padding:20px 0">Cargando uniformes…</p>';
 
   const { data: uniformes } = await sb
-    .from('uniformes')
-    .select('*')
-    .order('creado_at', { ascending: true });
+    .from('uniformes').select('*').order('creado_at', { ascending: true });
 
   if (!uniformes || !uniformes.length) {
     container.innerHTML = '<p style="color:#555">No hay uniformes creados aún.</p>';
@@ -428,36 +533,75 @@ async function renderCards() {
 
   for (const u of uniformes) {
     const { data: files } = await sb.storage
-      .from(BUCKET_FILES)
-      .list(u.slug, { limit: 10 });
+      .from(BUCKET_FILES).list(u.slug, { limit: 20 });
 
-    const fileList = (files && files.length)
-      ? files.map(f => `<span class="file-status uploaded">✔ ${f.name}</span>`).join(' &nbsp;')
-      : `<span class="file-status">Sin archivos</span>`;
+    const activo = u.descargas_activas !== false;
+
+    const fileItems = (files && files.length)
+      ? files.map(f => `
+          <div class="file-item">
+            ${f.name}
+            <button class="btn-delete-file" title="Eliminar archivo"
+              onclick="deleteFile('${u.slug}', '${f.name}')">✕</button>
+          </div>`).join('')
+      : `<p class="no-files-msg">Sin archivos subidos</p>`;
 
     container.innerHTML += `
       <div class="uniform-upload-card" id="card-${u.slug}">
-        <div>
-          <h3>${u.nombre}</h3>
-          <div class="sub">${u.tipo || ''}</div>
-          <div style="margin-top:8px" id="files-${u.slug}">${fileList}</div>
+        <div class="card-top">
+          <div>
+            <h3>${u.nombre}</h3>
+            <div class="sub">${u.tipo || ''}</div>
+          </div>
+          <div class="card-actions">
+            <div class="toggle-wrap">
+              <span>${activo ? 'Descarga activa' : 'Descarga desactivada'}</span>
+              <label class="toggle">
+                <input type="checkbox" ${activo ? 'checked' : ''}
+                  onchange="toggleDescargas('${u.slug}', '${u.id}', this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="upload-area">
+              <label class="upload-btn" for="file-${u.slug}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                Subir archivo
+              </label>
+              <input type="file" id="file-${u.slug}" accept=".pdf,.ai,.cdr"
+                onchange="uploadFile('${u.slug}', this)">
+              ${files && files.length ? `
+              <button class="btn-delete-all" onclick="deleteAllFiles('${u.slug}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14H6L5 6"/>
+                  <path d="M10 11v6M14 11v6"/>
+                </svg>
+                Eliminar todos
+              </button>` : ''}
+            </div>
+          </div>
         </div>
-        <div class="upload-area">
-          <label class="upload-btn" for="file-${u.slug}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            Subir archivo
-          </label>
-          <input type="file" id="file-${u.slug}" accept=".pdf,.ai,.cdr"
-            onchange="uploadFile('${u.slug}', this)">
-        </div>
+        <div class="file-list" id="files-${u.slug}">${fileItems}</div>
       </div>`;
   }
 }
 
+// ─── TOGGLE DESCARGAS ──────────────────────────────────────────
+async function toggleDescargas(slug, id, checkbox) {
+  const activo = checkbox.checked;
+  const label  = checkbox.closest('.toggle-wrap').querySelector('span');
+  label.textContent = activo ? 'Descarga activa' : 'Descarga desactivada';
+
+  await sb.from('uniformes')
+    .update({ descargas_activas: activo })
+    .eq('id', id);
+}
+
+// ─── SUBIR ARCHIVO ─────────────────────────────────────────────
 async function uploadFile(slug, input) {
   if (!input.files || !input.files[0]) return;
   const file     = input.files[0];
@@ -473,8 +617,34 @@ async function uploadFile(slug, input) {
     return;
   }
 
-  statusEl.innerHTML = `<span class="file-status uploaded">✔ ${file.name} subido correctamente</span>`;
-  setTimeout(() => renderCards(), 1500);
+  setTimeout(() => renderCards(), 1000);
+}
+
+// ─── ELIMINAR UN ARCHIVO ───────────────────────────────────────
+async function deleteFile(slug, fileName) {
+  if (!confirm(`¿Eliminar "${fileName}"?`)) return;
+
+  const { error } = await sb.storage
+    .from(BUCKET_FILES).remove([`${slug}/${fileName}`]);
+
+  if (error) { alert('Error al eliminar: ' + error.message); return; }
+  renderCards();
+}
+
+// ─── ELIMINAR TODOS LOS ARCHIVOS ───────────────────────────────
+async function deleteAllFiles(slug) {
+  if (!confirm(`¿Eliminar TODOS los archivos de "${slug}"? Esta acción no se puede deshacer.`)) return;
+
+  const { data: files } = await sb.storage
+    .from(BUCKET_FILES).list(slug, { limit: 50 });
+
+  if (!files || !files.length) return;
+
+  const paths = files.map(f => `${slug}/${f.name}`);
+  const { error } = await sb.storage.from(BUCKET_FILES).remove(paths);
+
+  if (error) { alert('Error al eliminar: ' + error.message); return; }
+  renderCards();
 }
 
 // ─── AUTO-LOGIN ────────────────────────────────────────────────

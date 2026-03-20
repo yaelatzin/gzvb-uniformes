@@ -44,38 +44,33 @@
 <script src="js/main.js"></script>
 <script>
 const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
 const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function cargarUniforme() {
   const params = new URLSearchParams(window.location.search);
   const slug   = params.get('slug');
 
-  if (!slug) {
-    window.location.href = 'index.html';
-    return;
-  }
+  if (!slug) { window.location.href = 'index.html'; return; }
 
   const { data: u, error } = await sb
-    .from('uniformes')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+    .from('uniformes').select('*').eq('slug', slug).single();
 
-  if (error || !u) {
-    window.location.href = 'index.html';
-    return;
-  }
+  if (error || !u) { window.location.href = 'index.html'; return; }
 
   document.title = `${u.nombre} | GZVB`;
 
-  // Imágenes del uniforme
   const baseImg = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${slug}`;
   const imgs    = [1, 2, 3].map(i =>
     `<img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
       onerror="this.style.display='none'">`
   ).join('');
+
+  // Botón de descarga solo si está activo
+  const descargaHTML = u.descargas_activas !== false
+    ? `<div id="download-btn-container"><span class="no-file-msg">Cargando…</span></div>`
+    : ``;
 
   document.getElementById('pageContent').innerHTML = `
     <header class="uniform-hero">
@@ -88,23 +83,20 @@ async function cargarUniforme() {
     <section class="uniform-info">
       <h2>Concepto del diseño</h2>
       <p>${u.concepto || ''}</p>
-
       <ul>
         <li>Diseñado para voleibol</li>
         <li>Ideal para equipos competitivos</li>
         <li>Personalizable en colores y números</li>
       </ul>
-
       <div class="btn-actions">
         <a href="https://wa.link/v7e1yu" class="btn" target="_blank">Cotizar este uniforme</a>
-        <div id="download-btn-container">
-          <span class="no-file-msg">Cargando…</span>
-        </div>
+        ${descargaHTML}
       </div>
     </section>`;
 
-  // Cargar botón de descarga
-  loadDownloadButton(slug);
+  if (u.descargas_activas !== false) {
+    loadDownloadButton(slug);
+  }
 }
 
 cargarUniforme();
