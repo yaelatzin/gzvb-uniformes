@@ -59,15 +59,11 @@
 
   <!-- PANEL DE SUBIDA (oculto hasta login) -->
   <div class="admin-panel" id="adminPanel">
-
     <div class="admin-panel-header">
       <h2>Archivos de Uniformes</h2>
       <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
     </div>
-
-    <!-- Cards por uniforme -->
     <div id="uniformCards"></div>
-
   </div>
 
 </div>
@@ -81,14 +77,38 @@ const BUCKET        = 'uniformes';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ─── UNIFORMES DISPONIBLES ─────────────────────────────────────
-const UNIFORMES = [
-  { slug: 'alutemp',     nombre: 'ALUTEMP',     tipo: 'Diseño Infantil' },
-  { slug: 'la-piedad',   nombre: 'La Piedad',   tipo: 'Diseño Competitivo' },
-  { slug: 'panteras',    nombre: 'Panteras',    tipo: 'Réplica de Diseño' },
-  { slug: 'tlacuaches',  nombre: 'Tlacuaches',  tipo: 'Diseño Monocromático' },
-  { slug: 'xolos',       nombre: 'Xolos',       tipo: 'Diseño Personalizado' },
-];
+// ─── DETECTAR UNIFORMES AUTOMÁTICAMENTE DESDE index.html ───────
+async function detectarUniformes() {
+  try {
+    const res  = await fetch('index.html');
+    const html = await res.text();
+    const parser = new DOMParser();
+    const doc    = parser.parseFromString(html, 'text/html');
+
+    const uniformes = [];
+    doc.querySelectorAll('a.card').forEach(card => {
+      const href  = card.getAttribute('href') || '';
+      const match = href.match(/uniforme-(.+)\.html/);
+      if (!match) return;
+
+      const nombre = card.querySelector('h3')?.textContent?.trim() || match[1];
+      const tipo   = card.querySelector('p')?.textContent?.trim()  || '';
+
+      // Slug para Supabase: minúsculas, sin tildes, espacios a guiones
+      const slug = nombre.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+
+      uniformes.push({ slug, nombre, tipo });
+    });
+
+    return uniformes;
+  } catch (e) {
+    console.error('Error detectando uniformes:', e);
+    return [];
+  }
+}
 
 // ─── LOGIN ─────────────────────────────────────────────────────
 async function doLogin() {
@@ -123,10 +143,18 @@ async function showPanel() {
 // ─── RENDERIZAR CARDS ──────────────────────────────────────────
 async function renderCards() {
   const container = document.getElementById('uniformCards');
+  container.innerHTML = '<p style="color:#555;font-size:0.85rem;padding:20px 0">Detectando uniformes…</p>';
+
+  const UNIFORMES = await detectarUniformes();
+
+  if (!UNIFORMES.length) {
+    container.innerHTML = '<p style="color:#ff4d4d">No se encontraron uniformes en index.html</p>';
+    return;
+  }
+
   container.innerHTML = '';
 
   for (const u of UNIFORMES) {
-    // Listar archivos existentes
     const { data: files } = await sb.storage
       .from(BUCKET)
       .list(u.slug, { limit: 10 });
@@ -179,8 +207,6 @@ async function uploadFile(slug, input) {
   }
 
   statusEl.innerHTML = `<span class="file-status uploaded">✔ ${file.name} subido correctamente</span>`;
-
-  // Recargar lista completa después de 1.5s
   setTimeout(() => renderCards(), 1500);
 }
 
