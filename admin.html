@@ -353,6 +353,10 @@ async function renderEditList() {
           <textarea id="edit-concepto-${u.id}">${u.concepto || ''}</textarea>
         </div>
         <div class="form-group" style="margin-bottom:16px">
+          <label>Subtítulo (bajo el nombre del uniforme)</label>
+          <input type="text" id="edit-subtitulo-${u.id}" value="${u.subtitulo || 'Uniforme de voleibol – alto rendimiento'}">
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
           <label>Imagen de portada (dejar vacío para mantener la actual)</label>
           <div class="galeria-upload-box" onclick="document.getElementById('edit-galeria-${u.id}').click()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
@@ -409,8 +413,9 @@ function toggleEditCard(id) {
 async function guardarEdicion(id, slug) {
   const nombre   = document.getElementById(`edit-nombre-${id}`).value.trim();
   const tipo     = document.getElementById(`edit-tipo-${id}`).value.trim();
-  const concepto = document.getElementById(`edit-concepto-${id}`).value.trim();
-  const imgGal   = document.getElementById(`edit-galeria-${id}`).files[0];
+  const concepto   = document.getElementById(`edit-concepto-${id}`).value.trim();
+  const subtitulo = document.getElementById(`edit-subtitulo-${id}`).value.trim();
+  const imgGal    = document.getElementById(`edit-galeria-${id}`).files[0];
   const statusEl = document.getElementById(`edit-status-${id}`);
 
   if (!nombre) { statusEl.className = 'form-status error'; statusEl.textContent = '⚠ El nombre es obligatorio.'; return; }
@@ -419,7 +424,7 @@ async function guardarEdicion(id, slug) {
   statusEl.textContent = '⏳ Guardando…';
 
   // Actualizar texto en BD
-  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto }).eq('id', id);
+  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto, subtitulo }).eq('id', id);
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
   // Actualizar portada si se seleccionó una nueva

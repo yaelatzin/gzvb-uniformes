@@ -95,7 +95,7 @@ async function cargarUniforme() {
   document.getElementById('pageContent').innerHTML = `
     <header class="uniform-hero">
       <h1>${u.nombre}</h1>
-      <p>Uniforme de voleibol – alto rendimiento</p>
+      <p>${u.subtitulo || 'Uniforme de voleibol – alto rendimiento'}</p>
     </header>
     <section class="uniform-gallery">${imgs}</section>
     <section class="uniform-info">
