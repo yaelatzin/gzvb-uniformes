@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { padding-top: 70px; }
+
     .gallery-loading {
       grid-column: 1/-1;
       padding: 60px;
@@ -16,6 +17,62 @@
       color: #555;
       font-size: 0.9rem;
       letter-spacing: 2px;
+    }
+
+    /* Skeleton loader */
+    .card-skeleton {
+      background: #111;
+      border-radius: 12px;
+      border: 1px solid #1a1a1a;
+      overflow: hidden;
+    }
+    .skeleton-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton-info {
+      padding: 16px;
+      background: #0f0f0f;
+    }
+    .skeleton-line {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin-bottom: 8px;
+    }
+    .skeleton-line.short { width: 60%; }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Badge no disponible */
+    .card-wrapper { position: relative; }
+    .badge-unavailable {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.85);
+      color: #ff4d4d;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #ff4d4d;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .card.inactive {
+      opacity: 0.45;
+      pointer-events: none;
+      filter: grayscale(0.6);
     }
   </style>
 </head>
@@ -40,7 +97,15 @@
 </header>
 
 <section class="gallery" id="gallery">
-  <div class="gallery-loading">Cargando uniformes…</div>
+  <!-- Skeletons mientras carga -->
+  ${[...Array(4)].map(() => `
+  <div class="card-skeleton">
+    <div class="skeleton-img"></div>
+    <div class="skeleton-info">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>`).join('')}
 </section>
 
 <a href="https://wa.link/v7e1yu" class="whatsapp" target="_blank">WhatsApp</a>
@@ -57,9 +122,10 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 async function cargarGaleria() {
   const gallery = document.getElementById('gallery');
+
   const { data: uniformes, error } = await sb
     .from('uniformes')
-    .select('*')
+    .select('slug, nombre, tipo, activo')
     .order('creado_at', { ascending: true });
 
   if (error || !uniformes || !uniformes.length) {
@@ -68,15 +134,26 @@ async function cargarGaleria() {
   }
 
   gallery.innerHTML = uniformes.map(u => {
-    const imgUrl = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${u.slug}/galeria.jpg`;
+    // Intentar WebP primero, fallback a jpg
+    const imgBase = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${u.slug}`;
+    const inactive = u.activo === false;
+
     return `
-      <a href="uniforme.html?slug=${u.slug}" class="card">
-        <img src="${imgUrl}" alt="${u.nombre}" onerror="this.style.minHeight='200px';this.style.background='#1a1a1a'">
-        <div class="card-info">
-          <h3>${u.nombre}</h3>
-          <p>${u.tipo || ''}</p>
-        </div>
-      </a>`;
+      <div class="card-wrapper">
+        ${inactive ? '<span class="badge-unavailable">No disponible</span>' : ''}
+        <a href="uniforme.html?slug=${u.slug}" class="card${inactive ? ' inactive' : ''}">
+          <picture>
+            <source srcset="${imgBase}/galeria.webp" type="image/webp">
+            <img src="${imgBase}/galeria.jpg" alt="${u.nombre}"
+              loading="lazy"
+              onerror="this.closest('picture').parentElement.style.minHeight='200px';this.style.display='none'">
+          </picture>
+          <div class="card-info">
+            <h3>${u.nombre}</h3>
+            <p>${u.tipo || ''}</p>
+          </div>
+        </a>
+      </div>`;
   }).join('');
 }
 

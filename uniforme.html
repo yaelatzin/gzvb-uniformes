@@ -10,13 +10,8 @@
   <style>
     body { padding-top: 70px; }
     .loading-page {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 60vh;
-      color: #555;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
+      display: flex; align-items: center; justify-content: center;
+      height: 60vh; color: #555; font-size: 0.9rem; letter-spacing: 2px;
     }
   </style>
 </head>
@@ -43,7 +38,7 @@
 
 <script src="js/main.js"></script>
 <script>
-const SUPABASE_URL  = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
+const SUPABASE_URL      = 'https://fwzubitfjthyhmmlrrkg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3enViaXRmanRoeWhtbWxycmtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMTk2NTUsImV4cCI6MjA4OTU5NTY1NX0.ie3sQzRGewp-5Hw10wPy2ainfy8L-pgmDSUAA-YCo54';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -51,7 +46,6 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 async function cargarUniforme() {
   const params = new URLSearchParams(window.location.search);
   const slug   = params.get('slug');
-
   if (!slug) { window.location.href = 'index.html'; return; }
 
   const { data: u, error } = await sb
@@ -62,24 +56,24 @@ async function cargarUniforme() {
   document.title = `${u.nombre} | GZVB`;
 
   const baseImg = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${slug}`;
-  const imgs    = [1, 2, 3].map(i =>
-    `<img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
-      onerror="this.style.display='none'">`
-  ).join('');
 
-  // Botón de descarga solo si está activo
+  const imgs = [1,2,3].map(i => `
+    <picture>
+      <source srcset="${baseImg}/foto-${i}.webp" type="image/webp">
+      <img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
+        loading="lazy" onerror="this.closest('picture').style.display='none'">
+    </picture>`).join('');
+
   const descargaHTML = u.descargas_activas !== false
     ? `<div id="download-btn-container"><span class="no-file-msg">Cargando…</span></div>`
-    : ``;
+    : '';
 
   document.getElementById('pageContent').innerHTML = `
     <header class="uniform-hero">
       <h1>${u.nombre}</h1>
       <p>Uniforme de voleibol – alto rendimiento</p>
     </header>
-
     <section class="uniform-gallery">${imgs}</section>
-
     <section class="uniform-info">
       <h2>Concepto del diseño</h2>
       <p>${u.concepto || ''}</p>
@@ -94,9 +88,7 @@ async function cargarUniforme() {
       </div>
     </section>`;
 
-  if (u.descargas_activas !== false) {
-    loadDownloadButton(slug);
-  }
+  if (u.descargas_activas !== false) loadDownloadButton(slug);
 }
 
 cargarUniforme();
