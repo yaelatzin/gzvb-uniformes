@@ -149,6 +149,16 @@
     .file-status.uploading { color: #facc15; }
     .file-status.error     { color: #ff4d4d; }
     .no-files-msg { color: #333; font-size: 0.76rem; padding-top: 8px; }
+
+    /* Pedidos */
+    .pedidos-table-wrap { overflow-x: auto; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { background: #1a1a1a; color: #888; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; font-size: 0.72rem; }
+    td { padding: 12px 14px; border-bottom: 1px solid #1a1a1a; color: #ccc; vertical-align: middle; }
+    tr:hover td { background: #111; }
+    .badge-clave { background: #1a1a1a; border: 1px solid #c8ff00; color: #c8ff00; padding: 3px 10px; border-radius: 20px; font-family: monospace; font-size: 0.78rem; letter-spacing: 2px; }
+    .btn-dl-logo { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; background: transparent; border: 1px solid #2a2a2a; border-radius: 6px; color: #888; font-size: 0.75rem; cursor: pointer; text-decoration: none; transition: border-color 0.2s, color 0.2s; font-family: "DM Sans", sans-serif; }
+    .btn-dl-logo:hover { border-color: #c8ff00; color: #c8ff00; }
   </style>
 </head>
 <body>
@@ -187,6 +197,7 @@
       <button class="tab-btn active" onclick="switchTab('nuevo', this)">+ Nuevo Uniforme</button>
       <button class="tab-btn" onclick="switchTab('editar', this)">✏ Editar</button>
       <button class="tab-btn" onclick="switchTab('archivos', this)">Archivos</button>
+      <button class="tab-btn" onclick="switchTab('pedidos', this)">📋 Pedidos</button>
     </div>
 
     <!-- TAB: NUEVO -->
@@ -247,6 +258,13 @@
       </div>
     </div>
 
+    <!-- TAB: PEDIDOS -->
+    <div class="tab-content" id="tab-pedidos">
+      <div id="pedidosContainer">
+        <p style="color:#555;font-size:0.85rem;padding:20px 0">Cargando pedidos…</p>
+      </div>
+    </div>
+
     <!-- TAB: ARCHIVOS -->
     <div class="tab-content" id="tab-archivos">
       <div id="uniformCards"></div>
@@ -270,6 +288,7 @@ function switchTab(tab, btn) {
   btn.classList.add('active');
   if (tab === 'archivos') renderCards();
   if (tab === 'editar')   renderEditList();
+  if (tab === 'pedidos')  renderPedidos();
 }
 
 // ─── PREVIEWS ─────────────────────────────────────────────────
@@ -584,6 +603,59 @@ async function deleteAllFiles(slug) {
   const { error } = await sb.storage.from(BUCKET_FILES).remove(files.map(f => `${slug}/${f.name}`));
   if (error) { alert('Error: ' + error.message); return; }
   renderCards();
+}
+
+// ─── PEDIDOS ───────────────────────────────────────────────────
+async function renderPedidos() {
+  const container = document.getElementById('pedidosContainer');
+  container.innerHTML = '<p style="color:#555;font-size:0.85rem;padding:20px 0">Cargando pedidos…</p>';
+
+  const { data: pedidos, error } = await sb
+    .from('pedidos').select('*').order('creado_at', { ascending: false });
+
+  if (error || !pedidos?.length) {
+    container.innerHTML = '<p style="color:#555">No hay pedidos aún.</p>';
+    return;
+  }
+
+  const rows = pedidos.map(p => {
+    const fecha = new Date(p.creado_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+    const logoBtn = p.logo_url
+      ? `<a class="btn-dl-logo" href="#" onclick="descargarLogo('${p.logo_url}');return false;">⬇ Logo</a>`
+      : '<span style="color:#444">—</span>';
+    return `<tr>
+      <td>#${p.numero_pedido}</td>
+      <td>#${p.numero_cliente}</td>
+      <td>${p.nombre}</td>
+      <td>${p.correo}</td>
+      <td>${p.telefono}</td>
+      <td>${p.nombre_equipo}</td>
+      <td>${p.uniforme_nombre}</td>
+      <td><span class="badge-clave">${p.clave_descarga}</span></td>
+      <td>${logoBtn}</td>
+      <td style="color:#666;font-size:0.75rem">${fecha}</td>
+    </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="pedidos-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th><th>Cliente</th><th>Nombre</th><th>Correo</th>
+            <th>Teléfono</th><th>Equipo</th><th>Uniforme</th>
+            <th>Clave</th><th>Logo</th><th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+async function descargarLogo(path) {
+  const { data, error } = await sb.storage.from('logos-clientes').createSignedUrl(path, 60);
+  if (error) { alert('Error al obtener el logo'); return; }
+  window.open(data.signedUrl, '_blank');
 }
 
 // ─── AUTO-LOGIN ────────────────────────────────────────────────

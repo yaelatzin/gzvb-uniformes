@@ -9,51 +9,39 @@ const modalCSS = `
     background: rgba(0,0,0,0.85);
     display: flex; align-items: center; justify-content: center;
     z-index: 9999; padding: 20px;
-    animation: fadeIn 0.2s ease;
+    animation: fadeInDL 0.2s ease;
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeInDL { from { opacity: 0; } to { opacity: 1; } }
 
   #download-modal {
-    background: #111;
-    border: 1px solid #2a2a2a;
-    border-radius: 16px;
-    padding: 32px 28px;
+    background: #111; border: 1px solid #2a2a2a;
+    border-radius: 16px; padding: 32px 28px;
     width: 100%; max-width: 420px;
   }
-
   #download-modal h3 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 8px;
   }
+  #download-modal p { color: #888; font-size: 0.85rem; margin-bottom: 24px; }
 
-  #download-modal p {
-    color: #888; font-size: 0.85rem; margin-bottom: 24px;
-  }
-
-  .modal-field {
+  .modal-field-dl {
     display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;
   }
-
-  .modal-field label {
+  .modal-field-dl label {
     font-size: 0.75rem; text-transform: uppercase;
     letter-spacing: 1.5px; color: #666;
   }
-
-  .modal-field input {
+  .modal-field-dl input {
     background: #1a1a1a; border: 1px solid #2a2a2a;
     border-radius: 8px; padding: 11px 14px;
     color: #f5f5f5; font-family: 'DM Sans', sans-serif;
     font-size: 0.9rem; outline: none;
     transition: border-color 0.2s; width: 100%;
   }
+  .modal-field-dl input:focus { border-color: #c8ff00; }
 
-  .modal-field input:focus { border-color: #c8ff00; }
-
-  .modal-actions {
-    display: flex; gap: 10px; margin-top: 24px;
-  }
-
-  .modal-btn-confirm {
+  .modal-actions-dl { display: flex; gap: 10px; margin-top: 24px; }
+  .modal-btn-confirm-dl {
     flex: 1; padding: 12px;
     background: #c8ff00; color: #000;
     font-family: 'Bebas Neue', sans-serif;
@@ -61,31 +49,29 @@ const modalCSS = `
     border: none; border-radius: 8px; cursor: pointer;
     transition: opacity 0.2s;
   }
-  .modal-btn-confirm:hover { opacity: 0.85; }
-  .modal-btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .modal-btn-cancel {
-    padding: 12px 20px;
-    background: transparent; color: #666;
+  .modal-btn-confirm-dl:hover { opacity: 0.85; }
+  .modal-btn-confirm-dl:disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-btn-cancel-dl {
+    padding: 12px 20px; background: transparent; color: #666;
     border: 1px solid #2a2a2a; border-radius: 8px;
     cursor: pointer; font-family: 'DM Sans', sans-serif;
     font-size: 0.85rem; transition: border-color 0.2s, color 0.2s;
   }
-  .modal-btn-cancel:hover { border-color: #ff4d4d; color: #ff4d4d; }
-
-  .modal-error {
-    color: #ff4d4d; font-size: 0.8rem; margin-top: 8px; display: none;
-  }
+  .modal-btn-cancel-dl:hover { border-color: #ff4d4d; color: #ff4d4d; }
+  .modal-error-dl { color: #ff4d4d; font-size: 0.8rem; margin-top: 8px; display: none; }
+  .modal-hint { font-size: 0.75rem !important; color: #555 !important; margin-bottom: 4px !important; }
 `;
 
-// Inyectar estilos del modal
 const styleEl = document.createElement('style');
 styleEl.textContent = modalCSS;
 document.head.appendChild(styleEl);
 
-// ─── MOSTRAR MODAL ANTES DE DESCARGAR ─────────────────────────
+// ─── SUPABASE CLIENT ──────────────────────────────────────────
+const { createClient } = supabase;
+const sbMain = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ─── MOSTRAR MODAL DE DESCARGA CON CLAVE ──────────────────────
 function mostrarModalDescarga(fileUrl, fileName, uniformeNombre) {
-  // Eliminar modal anterior si existe
   const existing = document.getElementById('download-modal-overlay');
   if (existing) existing.remove();
 
@@ -96,21 +82,22 @@ function mostrarModalDescarga(fileUrl, fileName, uniformeNombre) {
       <h3>Descargar archivo</h3>
       <p>Ingresa tus datos para continuar con la descarga de <b>${fileName}</b></p>
 
-      <div class="modal-field">
+      <div class="modal-field-dl">
         <label>Nombre completo</label>
         <input type="text" id="modal-nombre" placeholder="Tu nombre" autocomplete="name">
       </div>
 
-      <div class="modal-field">
-        <label>Teléfono o correo</label>
-        <input type="text" id="modal-contacto" placeholder="Tu teléfono o correo" autocomplete="email">
+      <div class="modal-field-dl">
+        <label>Clave única de descarga</label>
+        <p class="modal-hint">Si no tienes una clave, realiza primero tu pedido.</p>
+        <input type="text" id="modal-clave" placeholder="XXXX-XXXX-XXXX" style="text-transform:uppercase;letter-spacing:2px">
       </div>
 
-      <p class="modal-error" id="modal-error">Por favor completa todos los campos.</p>
+      <p class="modal-error-dl" id="modal-error"></p>
 
-      <div class="modal-actions">
-        <button class="modal-btn-cancel" onclick="cerrarModal()">Cancelar</button>
-        <button class="modal-btn-confirm" id="modal-confirm-btn"
+      <div class="modal-actions-dl">
+        <button class="modal-btn-cancel-dl" onclick="cerrarModalDescarga()">Cancelar</button>
+        <button class="modal-btn-confirm-dl" id="modal-confirm-btn"
           onclick="confirmarDescarga('${fileUrl}', '${fileName}', '${uniformeNombre}')">
           Descargar
         </button>
@@ -121,25 +108,41 @@ function mostrarModalDescarga(fileUrl, fileName, uniformeNombre) {
   setTimeout(() => document.getElementById('modal-nombre')?.focus(), 100);
 }
 
-function cerrarModal() {
+function cerrarModalDescarga() {
   const overlay = document.getElementById('download-modal-overlay');
   if (overlay) overlay.remove();
 }
 
 async function confirmarDescarga(fileUrl, fileName, uniformeNombre) {
-  const nombre   = document.getElementById('modal-nombre').value.trim();
-  const contacto = document.getElementById('modal-contacto').value.trim();
-  const errEl    = document.getElementById('modal-error');
-  const btn      = document.getElementById('modal-confirm-btn');
+  const nombre = document.getElementById('modal-nombre').value.trim();
+  const clave  = document.getElementById('modal-clave').value.trim().toUpperCase();
+  const errEl  = document.getElementById('modal-error');
+  const btn    = document.getElementById('modal-confirm-btn');
 
-  if (!nombre || !contacto) {
+  if (!nombre || !clave) {
     errEl.style.display = 'block';
+    errEl.textContent = 'Por favor completa todos los campos.';
     return;
   }
 
   errEl.style.display = 'none';
-  btn.textContent = 'Descargando…';
+  btn.textContent = 'Verificando…';
   btn.disabled = true;
+
+  // Verificar clave en Supabase
+  const { data: pedido, error } = await sbMain
+    .from('pedidos')
+    .select('id, usado, nombre')
+    .eq('clave_descarga', clave)
+    .single();
+
+  if (error || !pedido) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Clave inválida. Verifica e intenta de nuevo.';
+    btn.textContent = 'Descargar';
+    btn.disabled = false;
+    return;
+  }
 
   // Iniciar descarga
   const a = document.createElement('a');
@@ -150,21 +153,16 @@ async function confirmarDescarga(fileUrl, fileName, uniformeNombre) {
   a.click();
   document.body.removeChild(a);
 
-  // Enviar notificación por email
+  // Notificar descarga
   try {
     await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      },
-      body: JSON.stringify({ nombre, contacto, archivo: fileName, uniforme: uniformeNombre })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ tipo: 'descarga', nombre, contacto: clave, archivo: fileName, uniforme: uniformeNombre }),
     });
-  } catch (e) {
-    console.error('Error enviando notificación:', e);
-  }
+  } catch(e) { console.error(e); }
 
-  cerrarModal();
+  cerrarModalDescarga();
 }
 
 // ─── CARGAR BOTONES DE DESCARGA ───────────────────────────────
@@ -172,7 +170,6 @@ async function loadDownloadButton(uniformSlug) {
   const container = document.getElementById('download-btn-container');
   if (!container) return;
 
-  // Obtener nombre del uniforme del DOM
   const uniformeNombre = document.querySelector('.uniform-hero h1')?.textContent || uniformSlug;
 
   try {
