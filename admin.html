@@ -45,6 +45,16 @@
     }
     .form-group textarea:focus { border-color: #c8ff00; }
 
+    .form-group select {
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 12px 16px; color: #f5f5f5; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; outline: none; width: 100%;
+      transition: border-color 0.2s; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .form-group select:focus { border-color: #c8ff00; }
+
     .img-upload-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 8px; }
     .img-upload-box {
       background: #1a1a1a; border: 1.5px dashed #2a2a2a; border-radius: 10px;
@@ -192,6 +202,14 @@
             <label>Tipo / descripción corta</label>
             <input type="text" id="uTipo" placeholder="Ej: Diseño Personalizado">
           </div>
+          <div class="form-group">
+            <label>Etiqueta / categoría</label>
+            <select id="uEtiqueta">
+              <option value="playeras">Playeras</option>
+              <option value="shorts-licras">Shorts / Licras</option>
+              <option value="conjuntos">Conjuntos</option>
+            </select>
+          </div>
         </div>
         <div class="form-group" style="margin-top:16px">
           <label>Concepto del diseño</label>
@@ -288,7 +306,8 @@ async function showPanel() {
 async function crearUniforme() {
   const nombre   = document.getElementById('uNombre').value.trim();
   const tipo     = document.getElementById('uTipo').value.trim();
-  const concepto = document.getElementById('uConcepto').value.trim();
+  const concepto  = document.getElementById('uConcepto').value.trim();
+  const etiqueta = document.getElementById('uEtiqueta').value;
   const imgGal   = document.getElementById('imgGaleria').files[0];
   const statusEl = document.getElementById('formStatus');
 
@@ -301,7 +320,7 @@ async function crearUniforme() {
   statusEl.className = 'form-status loading';
   statusEl.textContent = '⏳ Guardando uniforme…';
 
-  const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto, activo: true, descargas_activas: true });
+  const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto, etiqueta, activo: true, descargas_activas: true });
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
   if (imgGal) { statusEl.textContent = '⏳ Subiendo portada…'; await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true }); }
@@ -313,6 +332,7 @@ async function crearUniforme() {
   statusEl.className = 'form-status success';
   statusEl.textContent = `✔ "${nombre}" creado exitosamente.`;
   ['uNombre','uTipo','uConcepto'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('uEtiqueta').value = 'playeras';
   document.getElementById('imgGaleria').value = '';
   document.getElementById('galeriaName').textContent = 'Seleccionar imagen de portada (JPG/PNG)';
   document.getElementById('galeriaName').className = '';
@@ -414,7 +434,8 @@ async function guardarEdicion(id, slug) {
   const nombre   = document.getElementById(`edit-nombre-${id}`).value.trim();
   const tipo     = document.getElementById(`edit-tipo-${id}`).value.trim();
   const concepto   = document.getElementById(`edit-concepto-${id}`).value.trim();
-  const subtitulo = document.getElementById(`edit-subtitulo-${id}`).value.trim();
+  const subtitulo  = document.getElementById(`edit-subtitulo-${id}`).value.trim();
+  const etiqueta   = document.getElementById(`edit-etiqueta-${id}`).value;
   const imgGal    = document.getElementById(`edit-galeria-${id}`).files[0];
   const statusEl = document.getElementById(`edit-status-${id}`);
 
@@ -424,7 +445,7 @@ async function guardarEdicion(id, slug) {
   statusEl.textContent = '⏳ Guardando…';
 
   // Actualizar texto en BD
-  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto, subtitulo }).eq('id', id);
+  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto, subtitulo, etiqueta }).eq('id', id);
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
   // Actualizar portada si se seleccionó una nueva
