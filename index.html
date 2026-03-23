@@ -7,29 +7,19 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
   <style>
     body { padding-top: 70px; }
 
     /* PANTALLA DE CARGA */
     #splash {
-      position: fixed;
-      inset: 0;
-      background: #080808;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      position: fixed; inset: 0; background: #080808;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s ease;
     }
     #splash.hidden { opacity: 0; visibility: hidden; }
-    #splash svg {
-      width: 90px;
-      height: 90px;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
+    #splash svg { width: 90px; height: 90px; animation: pulse 1.2s ease-in-out infinite; }
     @keyframes pulse {
-      0%, 100% { opacity: 1;   transform: scale(1);    }
+      0%, 100% { opacity: 1; transform: scale(1); }
       50%       { opacity: 0.3; transform: scale(0.85); }
     }
 
@@ -49,39 +39,26 @@
       grid-column: 1/-1; padding: 60px; text-align: center;
       color: #555; font-size: 0.9rem; letter-spacing: 2px;
     }
-	
-	/* Hamburguesa */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-}
-.hamburger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--white);
-  border-radius: 2px;
-  transition: 0.3s;
-}
-.nav-menu.open {
-  display: flex !important;
-  flex-direction: column;
-  position: absolute;
-  top: 62px;
-  left: 0;
-  width: 100%;
-  background: rgba(8,8,8,0.98);
-  padding: 16px 20px;
-  gap: 16px;
-  border-bottom: 1px solid #2a2a2a;
-}
-@media (max-width: 480px) {
-  .hamburger { display: flex; }
-}
-	
+
+    /* Filtro activo en navbar */
+    .nav-menu li a.active {
+      color: #c8ff00;
+      border-bottom: 2px solid #c8ff00;
+      padding-bottom: 2px;
+    }
+
+    /* Título de categoría */
+    .category-title {
+      padding: 40px 40px 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: #c8ff00;
+    }
+
+    @media (max-width: 768px) {
+      .category-title { padding: 24px 16px 0; font-size: 1.4rem; }
+    }
   </style>
 </head>
 <body>
@@ -96,13 +73,14 @@
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo"><img src="1.png" alt="GZVB Logo"></div>
-	<div class="hamburger" onclick="this.nextElementSibling.classList.toggle('open')" id="hamburger">
-	  <span></span><span></span><span></span>
-	</div>
+    <div class="hamburger" onclick="this.nextElementSibling.classList.toggle('open')" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
     <ul class="nav-menu">
-      <li><a href="#">Playeras</a></li>
-      <li><a href="#">Shorts</a></li>
-      <li><a href="#">Conjuntos</a></li>
+      <li><a href="#" onclick="filtrar(null, this)" id="nav-todos">Todos</a></li>
+      <li><a href="#" onclick="filtrar('playeras', this)">Playeras</a></li>
+      <li><a href="#" onclick="filtrar('shorts-licras', this)">Shorts</a></li>
+      <li><a href="#" onclick="filtrar('conjuntos', this)">Conjuntos</a></li>
     </ul>
   </div>
 </nav>
@@ -113,6 +91,8 @@
     <p>Diseño, identidad y rendimiento en la cancha</p>
   </div>
 </header>
+
+<div id="category-title"></div>
 
 <section class="gallery" id="gallery">
   <div class="gallery-loading">Cargando uniformes…</div>
@@ -130,21 +110,17 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
+let todosLosUniformes = [];
+
 function hideSplash() {
   document.getElementById('splash').classList.add('hidden');
 }
 
-async function cargarGaleria() {
+function renderGaleria(uniformes) {
   const gallery = document.getElementById('gallery');
 
-  const { data: uniformes, error } = await sb
-    .from('uniformes')
-    .select('slug, nombre, tipo, activo')
-    .order('creado_at', { ascending: true });
-
-  if (error || !uniformes || !uniformes.length) {
-    gallery.innerHTML = '<div class="gallery-loading">No hay uniformes disponibles aún.</div>';
-    hideSplash();
+  if (!uniformes || !uniformes.length) {
+    gallery.innerHTML = '<div class="gallery-loading">No hay uniformes en esta categoría.</div>';
     return;
   }
 
@@ -164,7 +140,47 @@ async function cargarGaleria() {
         </a>
       </div>`;
   }).join('');
+}
 
+function filtrar(etiqueta, linkEl) {
+  // Actualizar link activo
+  document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+  if (linkEl) linkEl.classList.add('active');
+
+  // Actualizar título de categoría
+  const titleEl = document.getElementById('category-title');
+  const labels  = { 'playeras': 'Playeras', 'shorts-licras': 'Shorts / Licras', 'conjuntos': 'Conjuntos' };
+  titleEl.innerHTML = etiqueta ? `<div class="category-title">${labels[etiqueta]}</div>` : '';
+
+  // Filtrar uniformes
+  const filtrados = etiqueta
+    ? todosLosUniformes.filter(u => u.etiqueta === etiqueta)
+    : todosLosUniformes;
+
+  renderGaleria(filtrados);
+
+  // Cerrar menú hamburguesa si está abierto
+  document.querySelector('.nav-menu')?.classList.remove('open');
+}
+
+async function cargarGaleria() {
+  const { data: uniformes, error } = await sb
+    .from('uniformes')
+    .select('slug, nombre, tipo, activo, etiqueta')
+    .order('creado_at', { ascending: true });
+
+  if (error || !uniformes || !uniformes.length) {
+    document.getElementById('gallery').innerHTML = '<div class="gallery-loading">No hay uniformes disponibles aún.</div>';
+    hideSplash();
+    return;
+  }
+
+  todosLosUniformes = uniformes;
+
+  // Marcar "Todos" como activo por defecto
+  document.getElementById('nav-todos').classList.add('active');
+
+  renderGaleria(todosLosUniformes);
   hideSplash();
 }
 
