@@ -221,6 +221,13 @@
               <option value="conjuntos">Conjuntos</option>
             </select>
           </div>
+          <div class="form-group">
+            <label>Tipo de diseño</label>
+            <select id="uTipoDiseno">
+              <option value="general">Diseño General</option>
+              <option value="personalizado">Diseño Personalizado</option>
+            </select>
+          </div>
         </div>
         <div class="form-group" style="margin-top:16px">
           <label>Concepto del diseño</label>
@@ -326,8 +333,9 @@ async function crearUniforme() {
   const nombre   = document.getElementById('uNombre').value.trim();
   const tipo     = document.getElementById('uTipo').value.trim();
   const concepto  = document.getElementById('uConcepto').value.trim();
-  const etiqueta = document.getElementById('uEtiqueta').value;
-  const imgGal   = document.getElementById('imgGaleria').files[0];
+  const etiqueta    = document.getElementById('uEtiqueta').value;
+  const tipoDiseno = document.getElementById('uTipoDiseno').value;
+  const imgGal     = document.getElementById('imgGaleria').files[0];
   const statusEl = document.getElementById('formStatus');
 
   if (!nombre) { statusEl.className = 'form-status error'; statusEl.textContent = '⚠ El nombre es obligatorio.'; return; }
@@ -339,7 +347,7 @@ async function crearUniforme() {
   statusEl.className = 'form-status loading';
   statusEl.textContent = '⏳ Guardando uniforme…';
 
-  const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto, etiqueta, activo: true, descargas_activas: true });
+  const { error: dbErr } = await sb.from('uniformes').insert({ slug, nombre, tipo, concepto, etiqueta, tipo_diseno: tipoDiseno, activo: true, descargas_activas: true });
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
   if (imgGal) { statusEl.textContent = '⏳ Subiendo portada…'; await sb.storage.from(BUCKET_IMGS).upload(`${slug}/galeria.jpg`, imgGal, { upsert: true }); }
@@ -352,6 +360,7 @@ async function crearUniforme() {
   statusEl.textContent = `✔ "${nombre}" creado exitosamente.`;
   ['uNombre','uTipo','uConcepto'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('uEtiqueta').value = 'playeras';
+  document.getElementById('uTipoDiseno').value = 'general';
   document.getElementById('imgGaleria').value = '';
   document.getElementById('galeriaName').textContent = 'Seleccionar imagen de portada (JPG/PNG)';
   document.getElementById('galeriaName').className = '';
@@ -462,7 +471,8 @@ async function guardarEdicion(id, slug) {
   const tipo     = document.getElementById(`edit-tipo-${id}`).value.trim();
   const concepto   = document.getElementById(`edit-concepto-${id}`).value.trim();
   const subtitulo  = document.getElementById(`edit-subtitulo-${id}`).value.trim();
-  const etiqueta   = document.getElementById(`edit-etiqueta-${id}`).value;
+  const etiqueta    = document.getElementById(`edit-etiqueta-${id}`).value;
+  const tipoDiseno  = document.getElementById(`edit-tipo-diseno-${id}`).value;
   const imgGal    = document.getElementById(`edit-galeria-${id}`).files[0];
   const statusEl = document.getElementById(`edit-status-${id}`);
 
@@ -472,7 +482,7 @@ async function guardarEdicion(id, slug) {
   statusEl.textContent = '⏳ Guardando…';
 
   // Actualizar texto en BD
-  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto, subtitulo, etiqueta }).eq('id', id);
+  const { error: dbErr } = await sb.from('uniformes').update({ nombre, tipo, concepto, subtitulo, etiqueta, tipo_diseno: tipoDiseno }).eq('id', id);
   if (dbErr) { statusEl.className = 'form-status error'; statusEl.textContent = `✖ ${dbErr.message}`; return; }
 
   // Actualizar portada si se seleccionó una nueva
