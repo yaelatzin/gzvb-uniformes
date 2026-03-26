@@ -405,6 +405,13 @@ async function renderEditList() {
           </select>
         </div>
         <div class="form-group" style="margin-bottom:16px">
+          <label>Tipo de diseño</label>
+          <select id="edit-tipo-diseno-${u.id}">
+            <option value="general" ${!u.tipo_diseno || u.tipo_diseno === 'general' ? 'selected' : ''}>Diseño General</option>
+            <option value="personalizado" ${u.tipo_diseno === 'personalizado' ? 'selected' : ''}>Diseño Personalizado</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
           <label>Concepto del diseño</label>
           <textarea id="edit-concepto-${u.id}">${u.concepto || ''}</textarea>
         </div>
