@@ -22,6 +22,18 @@
       50%       { opacity: 0.3; transform: scale(0.85); }
     }
 
+    /* Leyenda diseño personalizado */
+    .personalizado-notice {
+      background: rgba(167,139,250,0.08);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #c4b5fd;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+
     /* MODAL BASE */
     .modal-overlay {
       position: fixed; inset: 0;
@@ -38,12 +50,10 @@
       width: 100%; max-width: 480px;
       max-height: 90vh; overflow-y: auto;
     }
-
     .modal-box h3 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 10px;
     }
-
     .modal-notice {
       background: rgba(200,255,0,0.06);
       border: 1px solid rgba(200,255,0,0.2);
@@ -51,7 +61,6 @@
       color: #aaa; font-size: 0.82rem; line-height: 1.6;
       margin-bottom: 22px;
     }
-
     .modal-field {
       display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
     }
@@ -59,16 +68,16 @@
       font-size: 0.75rem; text-transform: uppercase;
       letter-spacing: 1.5px; color: #666;
     }
-    .modal-field input {
+    .modal-field input, .modal-field textarea {
       background: #1a1a1a; border: 1px solid #2a2a2a;
       border-radius: 8px; padding: 11px 14px;
       color: #f5f5f5; font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem; outline: none;
       transition: border-color 0.2s; width: 100%;
     }
-    .modal-field input:focus { border-color: #c8ff00; }
+    .modal-field input:focus, .modal-field textarea:focus { border-color: #c8ff00; }
+    .modal-field textarea { resize: vertical; min-height: 90px; }
 
-    /* Upload logo */
     .logo-upload-box {
       background: #1a1a1a; border: 1.5px dashed #2a2a2a;
       border-radius: 10px; padding: 20px;
@@ -92,23 +101,17 @@
     .modal-btn-primary:hover { opacity: 0.85; }
     .modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal-btn-cancel {
-      padding: 13px 20px;
-      background: transparent; color: #666;
+      padding: 13px 20px; background: transparent; color: #666;
       border: 1px solid #2a2a2a; border-radius: 8px;
       cursor: pointer; font-family: 'DM Sans', sans-serif;
       font-size: 0.85rem; transition: border-color 0.2s, color 0.2s;
     }
     .modal-btn-cancel:hover { border-color: #ff4d4d; color: #ff4d4d; }
-
     .modal-error { color: #ff4d4d; font-size: 0.8rem; margin-top: 8px; display: none; }
 
-    /* Confirmación de pedido */
-    .pedido-confirm {
-      text-align: center; padding: 10px 0;
-    }
-    .pedido-confirm .check-icon {
-      font-size: 3rem; margin-bottom: 16px;
-    }
+    /* Confirmación */
+    .pedido-confirm { text-align: center; padding: 10px 0; }
+    .pedido-confirm .check-icon { font-size: 3rem; margin-bottom: 16px; }
     .pedido-confirm h3 { margin-bottom: 12px; }
     .pedido-confirm p { color: #aaa; font-size: 0.88rem; margin-bottom: 8px; }
     .clave-box {
@@ -139,21 +142,21 @@
 
 <div id="pageContent"></div>
 
-<a href="https://wa.link/v7e1yu" class="whatsapp" target="_blank">WhatsApp</a>
-
 <footer>
   <p>© 2026 · Diseño exclusivo de uniformes de voleibol</p>
 </footer>
 
 <script src="js/main.js"></script>
 <script>
+
+const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/notificar-descarga`;
+
 let uniformeActual = null;
 
 function hideSplash() {
   document.getElementById('splash').classList.add('hidden');
 }
 
-// ─── GENERAR CLAVE ÚNICA ───────────────────────────────────────
 function generarClave() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let clave = '';
@@ -165,14 +168,22 @@ function generarClave() {
 }
 
 // ─── MODAL DE PEDIDO ──────────────────────────────────────────
-function abrirModalPedido() {
+function abrirModalPedido(esPersonalizado) {
   cerrarModal();
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.id = 'modal-pedido';
+
+  const tituloBtn = esPersonalizado ? 'Inspirar mi uniforme en este' : 'Quiero este diseño';
+  const campoIdea = esPersonalizado ? `
+    <div class="modal-field">
+      <label>Describe tu idea de diseño</label>
+      <textarea id="ped-idea" placeholder="Descríbeme tu idea…"></textarea>
+    </div>` : '';
+
   overlay.innerHTML = `
     <div class="modal-box">
-      <h3>Realizar Pedido</h3>
+      <h3>${tituloBtn}</h3>
       <div class="modal-notice">
         ⚠️ En la compra de diseños ya realizados, la única modificación disponible será el cambio de logotipo. Es decir, únicamente podrás subir el logotipo de tu club o equipo deportivo.
       </div>
@@ -193,7 +204,7 @@ function abrirModalPedido() {
         <label>Nombre del equipo</label>
         <input type="text" id="ped-equipo" placeholder="Nombre de tu club o equipo">
       </div>
-
+      ${campoIdea}
       <div class="modal-field">
         <label>Logotipo del equipo (JPG, PNG, AI, CDR, SVG — máx. 25MB)</label>
         <div class="logo-upload-box" onclick="document.getElementById('ped-logo').click()">
@@ -223,13 +234,14 @@ function cerrarModal() {
 }
 
 async function enviarPedido() {
-  const nombre       = document.getElementById('ped-nombre').value.trim();
-  const correo       = document.getElementById('ped-correo').value.trim();
-  const telefono     = document.getElementById('ped-telefono').value.trim();
+  const nombre        = document.getElementById('ped-nombre').value.trim();
+  const correo        = document.getElementById('ped-correo').value.trim();
+  const telefono      = document.getElementById('ped-telefono').value.trim();
   const nombre_equipo = document.getElementById('ped-equipo').value.trim();
-  const logoFile     = document.getElementById('ped-logo').files[0];
-  const errEl        = document.getElementById('ped-error');
-  const btn          = document.getElementById('ped-btn');
+  const idea          = document.getElementById('ped-idea')?.value.trim() || null;
+  const logoFile      = document.getElementById('ped-logo').files[0];
+  const errEl         = document.getElementById('ped-error');
+  const btn           = document.getElementById('ped-btn');
 
   if (!nombre || !correo || !telefono || !nombre_equipo) {
     errEl.style.display = 'block';
@@ -237,7 +249,6 @@ async function enviarPedido() {
     return;
   }
 
-  // Validar tamaño logo
   if (logoFile && logoFile.size > 25 * 1024 * 1024) {
     errEl.style.display = 'block';
     errEl.textContent = 'El logotipo no debe superar 25MB.';
@@ -250,25 +261,24 @@ async function enviarPedido() {
 
   const clave_descarga = generarClave();
 
-  // 1. Subir logo si existe
+  // Subir logo
   let logo_url = null;
   if (logoFile) {
     const ext      = logoFile.name.split('.').pop();
     const fileName = `${Date.now()}-${clave_descarga}.${ext}`;
     const { data: uploadData, error: uploadErr } = await sbMain.storage
-      .from('logos-clientes')
-      .upload(fileName, logoFile, { upsert: false });
+      .from('logos-clientes').upload(fileName, logoFile, { upsert: false });
     if (!uploadErr) logo_url = uploadData?.path;
   }
 
-  // 2. Insertar pedido en BD
+  // Insertar pedido
   const { data: pedido, error: pedErr } = await sbMain.from('pedidos').insert({
-    nombre, correo, telefono,
-    nombre_equipo,
-    uniforme_slug:   uniformeActual.slug,
-    uniforme_nombre: uniformeActual.nombre,
+    nombre, correo, telefono, nombre_equipo,
+    uniforme_slug:    uniformeActual.slug,
+    uniforme_nombre:  uniformeActual.nombre,
     logo_url,
     clave_descarga,
+    descripcion_idea: idea,
   }).select().single();
 
   if (pedErr) {
@@ -279,22 +289,22 @@ async function enviarPedido() {
     return;
   }
 
-  // 3. Enviar notificación al admin
+  // Notificar admin
   try {
     await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
       body: JSON.stringify({
-        tipo: 'pedido', nombre, correo, telefono,
-        nombre_equipo,
+        tipo: 'pedido', nombre, correo, telefono, nombre_equipo,
         uniforme_nombre: uniformeActual.nombre,
         numero_pedido:   pedido.numero_pedido,
         clave_descarga,
+        descripcion_idea: idea,
       }),
     });
   } catch(e) { console.error(e); }
 
-  // 4. Mostrar confirmación con clave
+  // Confirmación
   cerrarModal();
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -330,6 +340,7 @@ async function cargarUniforme() {
   uniformeActual = u;
   document.title = `${u.nombre} | GZVB`;
 
+  const esPersonalizado = u.tipo_diseno === 'personalizado';
   const baseImg = `${SUPABASE_URL}/storage/v1/object/public/imagenes-uniformes/${slug}`;
   const imgs    = [1,2,3].map(i =>
     `<img src="${baseImg}/foto-${i}.jpg" alt="${u.nombre} vista ${i}"
@@ -339,6 +350,15 @@ async function cargarUniforme() {
   const descargaHTML = u.descargas_activas !== false
     ? `<div id="download-btn-container"><span class="no-file-msg">Cargando…</span></div>`
     : '';
+
+  // Botón según tipo
+  const btnTexto = esPersonalizado ? 'Inspirar mi uniforme en este' : 'Quiero este diseño';
+
+  // Leyenda para personalizados
+  const leyendaPersonalizado = esPersonalizado ? `
+    <div class="personalizado-notice">
+      🎨 Este diseño personalizado no está a la venta, pero puedes inspirar tu diseño en este modelo.
+    </div>` : '';
 
   document.getElementById('pageContent').innerHTML = `
     <header class="uniform-hero">
@@ -354,8 +374,9 @@ async function cargarUniforme() {
         <li>Ideal para equipos competitivos</li>
         <li>Personalizable en colores y números</li>
       </ul>
+      ${leyendaPersonalizado}
       <div class="btn-actions">
-        <button class="btn" onclick="abrirModalPedido()">Cotizar este uniforme</button>
+        <button class="btn" onclick="abrirModalPedido(${esPersonalizado})">${btnTexto}</button>
         ${descargaHTML}
       </div>
     </section>`;
